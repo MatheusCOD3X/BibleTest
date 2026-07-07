@@ -1,0 +1,40 @@
+<section class="books-shell">
+  <div class="action-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Pesquisar livro</mat-label>
+      <input matInput [value]="searchTerm" (input)="searchTerm = $any($event.target).value" />
+      <button mat-icon-button matSuffix aria-label="Buscar livro">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-chip-listbox [value]="filter" (selectionChange)="onFilterChange($event)">
+      <mat-chip-option value="all">Todos</mat-chip-option>
+      <mat-chip-option value="old">Antigo Testamento</mat-chip-option>
+      <mat-chip-option value="new">Novo Testamento</mat-chip-option>
+      <mat-chip-option value="completed">Concluídos</mat-chip-option>
+      <mat-chip-option value="progress">Em andamento</mat-chip-option>
+      <mat-chip-option value="not-started">Não iniciados</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+  <div class="books-grid">
+    @for (book of filteredBooks; track book.id) {
+      <mat-card class="book-card">
+        <mat-card-content>
+          <div class="book-title">{{ book.name }}</div>
+          <div class="metric-label">{{ book.chapters }} capítulos • {{ book.testament }}</div>
+          <div class="book-progress">
+            <mat-progress-bar mode="determinate" [value]="storageService.getBookProgress(book).progressPercent"></mat-progress-bar>
+          </div>
+          <div class="book-progress-label">{{ storageService.getBookProgress(book).progressPercent }}% concluído</div>
+          <div class="book-actions">
+            <button mat-stroked-button [routerLink]="['/book', book.id]">Abrir</button>
+            <button mat-flat-button color="primary" (click)="toggleBookComplete(book)">
+              {{ storageService.getBookProgress(book).completed ? 'Desmarcar' : 'Marcar completo' }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</section>

@@ -1,0 +1,191 @@
+:root {
+  --color-primary: #1a2332;
+  --color-accent: #4a9b9f;
+  --color-neutral: #6b7280;
+  --color-bg: #f5f5f0;
+  --color-text: #1f2937;
+  --color-white: #ffffff;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --border-radius-card: 16px;
+  --border-radius-button: 999px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  background: var(--color-bg);
+  color: var(--color-text);
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  font: inherit;
+}
+
+.mat-card {
+  border-radius: var(--border-radius-card);
+  padding: 20px;
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+.mat-card-title,
+.mat-card-subtitle,
+.mat-form-field-label,
+label,
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 3vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 2vw, 2rem);
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+p,
+button,
+.mat-form-field-label,
+.mat-card-subtitle,
+label {
+  color: var(--color-neutral);
+}
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+  border-radius: 12px;
+  background: var(--color-white);
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  border-color: #e5e7eb;
+}
+
+.mat-form-field.mat-focused .mat-form-field-outline-thick {
+  border-color: var(--color-accent);
+}
+
+input.mat-input-element,
+textarea.mat-input-element {
+  border-radius: 12px;
+}
+
+.mat-chip-listbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mat-chip-option {
+  border-radius: 20px;
+  padding: 8px 16px;
+  background: #e5e7eb;
+  color: var(--color-neutral);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.mat-chip-option.mat-chip-selected {
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+
+.mat-progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mat-progress-bar-background {
+  background-color: #e5e7eb !important;
+}
+
+.mat-progress-bar-fill::after {
+  background-color: var(--color-accent) !important;
+}
+
+button.mat-raised-button,
+button.mat-stroked-button,
+button.mat-flat-button {
+  border-radius: var(--border-radius-button);
+  min-height: 44px;
+  padding: 0 18px;
+  text-transform: none;
+  font-weight: 600;
+}
+
+button.mat-raised-button {
+  background: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: 0 12px 28px rgba(74, 155, 159, 0.24);
+}
+
+button.mat-stroked-button {
+  border-color: #e5e7eb;
+  color: var(--color-primary);
+}
+
+button.mat-icon-button {
+  width: 44px;
+  height: 44px;
+}
+
+.mat-icon {
+  color: var(--color-primary);
+}
+
+.mat-list-item .mat-icon,
+.menu-icon {
+  color: var(--color-primary);
+}
+
+.search-field .mat-form-field-infix {
+  padding-left: 12px;
+}
+
+.mat-input-element::placeholder {
+  color: var(--color-neutral);
+  opacity: 1;
+}
+
+.stats-grid,
+.books-grid {
+  display: grid;
+  gap: 16px;
+}
+
+body::selection {
+  background: rgba(74, 155, 159, 0.25);
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+}

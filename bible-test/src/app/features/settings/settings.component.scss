@@ -1,0 +1,37 @@
+.settings-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.settings-card {
+  border-radius: 16px;
+  padding: 24px;
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.settings-card mat-form-field {
+  width: 100%;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .settings-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,39 @@
+<section class="settings-shell">
+  <mat-card class="settings-card">
+    <mat-card-title>Configurações</mat-card-title>
+    <mat-card-content>
+      <div class="settings-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tema</mat-label>
+          <mat-select [(ngModel)]="settings().theme">
+            <mat-option value="light">Claro</mat-option>
+            <mat-option value="dark">Escuro</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fonte</mat-label>
+          <mat-select [(ngModel)]="settings().fontFamily">
+            <mat-option value="inter">Inter</mat-option>
+            <mat-option value="serif">Serif</mat-option>
+            <mat-option value="mono">Mono</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tamanho</mat-label>
+          <input matInput type="number" [(ngModel)]="settings().fontSize" />
+        </mat-form-field>
+      </div>
+
+      <mat-slide-toggle [(ngModel)]="settings().animations">Animações</mat-slide-toggle>
+
+      <div class="action-row" style="margin-top: 16px;">
+        <button mat-raised-button color="primary" (click)="saveSettings()">Salvar</button>
+        <button mat-stroked-button color="warn" (click)="resetApp()">
+          {{ resetConfirm() ? 'Confirmar reset' : 'Resetar aplicativo' }}
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

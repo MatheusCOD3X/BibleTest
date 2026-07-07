@@ -1,0 +1,68 @@
+﻿<mat-sidenav-container class="app-shell" autosize>
+  <mat-sidenav #drawer class="app-sidenav" [mode]="isMobile() ? 'over' : 'side'" [opened]="!isMobile()" fixedInViewport>
+    <div class="menu-card">
+      <div class="menu-header">
+        <div>
+          <h2>Bible Tracker</h2>
+          <p>Leitura diária com progresso.</p>
+        </div>
+        <button mat-icon-button *ngIf="isMobile()" (click)="drawer.close()" aria-label="Fechar menu" class="drawer-close-button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="menu-divider"></div>
+
+      <mat-nav-list class="menu-list">
+        <a mat-list-item class="menu-link" routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }" (click)="isMobile() && drawer.close()">
+          <mat-icon aria-hidden="true" class="menu-icon">dashboard</mat-icon>
+          <span>Resumo</span>
+        </a>
+        <a mat-list-item class="menu-link books-link" routerLink="/books" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
+          <mat-icon aria-hidden="true" class="menu-icon">menu_book</mat-icon>
+          <span>Livros</span>
+        </a>
+        <a mat-list-item class="menu-link" routerLink="/statistics" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
+          <mat-icon aria-hidden="true" class="menu-icon">insights</mat-icon>
+          <span>Estatísticas</span>
+        </a>
+        <a mat-list-item class="menu-link" routerLink="/backup" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
+          <mat-icon aria-hidden="true" class="menu-icon">cloud_upload</mat-icon>
+          <span>Backup</span>
+        </a>
+        <a mat-list-item class="menu-link" routerLink="/settings" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
+          <mat-icon aria-hidden="true" class="menu-icon">settings</mat-icon>
+          <span>Configurações</span>
+        </a>
+      </mat-nav-list>
+
+      <div class="menu-footer">
+        <span class="version-label">v1.0</span>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="app-toolbar" color="primary">
+      <button mat-icon-button (click)="drawer.toggle()" aria-label="Abrir menu de navegação">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">Bible Tracker</span>
+      <span class="spacer"></span>
+      <button mat-icon-button routerLink="/dashboard" aria-label="Ir para dashboard">
+        <mat-icon>home</mat-icon>
+      </button>
+      <button mat-icon-button routerLink="/statistics" aria-label="Ir para estatísticas">
+        <mat-icon>insights</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <button mat-fab class="app-fab" color="accent" aria-label="Ações rápidas" (click)="openQuickActions()">
+      <mat-icon>rocket_launch</mat-icon>
+    </button>
+  </mat-sidenav-content>
+</mat-sidenav-container>

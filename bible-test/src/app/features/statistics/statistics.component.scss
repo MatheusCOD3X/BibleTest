@@ -1,0 +1,104 @@
+.stats-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.chart-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(300px, 1fr));
+}
+
+.stats-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.chart-card,
+.metric-card,
+.detail-card,
+mat-card {
+  border-radius: 16px;
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+}
+
+.chart-card:hover,
+.metric-card:hover,
+.detail-card:hover,
+mat-card:hover {
+  transform: translateY(-2px);
+}
+
+.chart-card {
+  min-height: 300px;
+  padding: 22px;
+}
+
+.metric-card {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 160px;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.metric-label {
+  color: var(--color-neutral);
+  font-size: 0.95rem;
+}
+
+.chart-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--color-primary);
+}
+
+.book-progress-row {
+  margin-bottom: 18px;
+}
+
+.chapter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.detail-card {
+  padding: 22px;
+}
+
+.detail-card p,
+.detail-card strong {
+  color: var(--color-primary);
+}
+
+@media (max-width: 1040px) {
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    min-height: 240px;
+  }
+}

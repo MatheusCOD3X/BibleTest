@@ -1,0 +1,68 @@
+.book-details-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.detail-card {
+  border-radius: 16px;
+  padding: 24px;
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+.chapter-card {
+  margin-bottom: 12px;
+}
+
+.chapter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.chapter-row:last-child {
+  border-bottom: none;
+}
+
+.chapter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.chapter-notes {
+  width: 100%;
+}
+
+.metric-label {
+  color: var(--color-neutral);
+}
+
+.empty-state {
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+  color: var(--color-neutral);
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .action-row {
+    justify-content: stretch;
+  }
+}

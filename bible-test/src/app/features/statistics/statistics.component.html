@@ -1,0 +1,82 @@
+<section class="stats-page">
+  <div class="chart-grid">
+    <mat-card>
+      <mat-card-title>Distribuição de capítulos</mat-card-title>
+      <mat-card-content class="chart-card">
+        <canvas
+          baseChart
+          [data]="chapterChartData()"
+          [options]="chartOptions"
+          [type]="chapterChartType"
+        ></canvas>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Top livros por progresso</mat-card-title>
+      <mat-card-content class="chart-card">
+        <canvas
+          baseChart
+          [data]="bookProgressChartData()"
+          [options]="chartOptions"
+          [type]="bookProgressChartType"
+        ></canvas>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="stats-grid">
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-value">{{ stats().completedChapters }}</div>
+        <div class="metric-label">Capítulos lidos</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-value">{{ stats().remainingChapters }}</div>
+        <div class="metric-label">Capítulos restantes</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-value">{{ stats().completedBooks }}</div>
+        <div class="metric-label">Livros completos</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-value">{{ stats().streak }}</div>
+        <div class="metric-label">Dias consecutivos</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="detail-card">
+    <mat-card-title>Progresso por livro</mat-card-title>
+    <mat-card-content>
+      @for (item of progressByBook(); track item.book.id) {
+        <div class="book-progress-row">
+          <div class="chapter-actions">
+            <strong>{{ item.book.name }}</strong>
+            <span>{{ item.progress.progressPercent }}%</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="item.progress.progressPercent"></mat-progress-bar>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="detail-card">
+    <mat-card-title>Histórico recente</mat-card-title>
+    <mat-card-content>
+      @if (history().length) {
+        @for (entry of history().slice(0, 8); track entry.id) {
+          <p>{{ entry.completedTime }} • {{ bibleDataService.getBookById(entry.bookId)?.name }} {{ entry.chapterNumber }}</p>
+        }
+      } @else {
+        <p>Nenhum capítulo concluído ainda.</p>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>

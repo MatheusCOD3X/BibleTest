@@ -1,0 +1,46 @@
+@if (book()) {
+  <section class="book-details-shell">
+    <div class="action-row">
+      <button mat-raised-button color="primary" (click)="markBookComplete(book()!)">Marcar livro completo</button>
+      <button mat-stroked-button (click)="unmarkBookComplete(book()!)">Desmarcar</button>
+    </div>
+
+    <mat-card class="detail-card">
+      <mat-card-title>{{ book()!.name }}</mat-card-title>
+      <mat-card-content>
+        <p>{{ book()!.chapters }} capítulos • {{ book()!.testament }}</p>
+        <mat-progress-bar mode="determinate" [value]="storageService.getBookProgress(book()!).progressPercent"></mat-progress-bar>
+        <p class="metric-label">{{ storageService.getBookProgress(book()!).progressPercent }}% concluído</p>
+      </mat-card-content>
+    </mat-card>
+
+    <div>
+      @for (chapterNumber of chapters(); track chapterNumber) {
+        <mat-card class="detail-card chapter-card">
+          <mat-card-content>
+            <div class="chapter-row">
+              <div class="chapter-actions">
+                <mat-checkbox [checked]="getChapterProgress(book()!, chapterNumber)?.completed ?? false" (change)="toggleChapter(book()!, chapterNumber)">
+                  Capítulo {{ chapterNumber }}
+                </mat-checkbox>
+                <div class="metric-label">
+                  @if (getChapterProgress(book()!, chapterNumber)?.completedAt) {
+                    {{ getChapterProgress(book()!, chapterNumber)?.completedTime }}
+                  } @else {
+                    Pendente
+                  }
+                </div>
+              </div>
+              <mat-form-field appearance="outline" class="chapter-notes">
+                <mat-label>Observações</mat-label>
+                <textarea matInput [ngModel]="getChapterProgress(book()!, chapterNumber)?.notes || ''" (ngModelChange)="updateNotes(book()!, chapterNumber, $event)"></textarea>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </section>
+} @else {
+  <div class="empty-state">Livro não encontrado.</div>
+}

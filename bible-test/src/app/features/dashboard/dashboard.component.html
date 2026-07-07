@@ -1,0 +1,120 @@
+<section class="dashboard-shell">
+  <div class="dashboard-hero-top">
+    <div class="hero-headline">
+      <div class="hero-label">Bible Tracker</div>
+      <h1>Uma jornada de leitura consistente.</h1>
+      <p>Acompanhe seu progresso diário com cards, gráficos e leitura rápida sempre ao alcance.</p>
+      <div class="hero-actions">
+        <button mat-flat-button color="primary" class="hero-pill" (click)="continueReading()">
+          Continuar leitura
+        </button>
+        <!-- <button mat-stroked-button class="hero-pill" routerLink="/books">
+          Ver livros
+        </button> -->
+      </div>
+    </div>
+    <mat-card class="hero-progress-card">
+      <div class="progress-ring-wrap">
+        <mat-progress-spinner
+          class="hero-spinner"
+          color="primary"
+          mode="determinate"
+          [value]="stats().progressPercent"
+          diameter="132"
+          strokeWidth="12">
+        </mat-progress-spinner>
+        <div class="progress-inner">
+          <div class="progress-value">{{ stats().progressPercent }}%</div>
+          <div class="progress-caption">Progresso geral</div>
+        </div>
+      </div>
+      <div class="progress-summary">
+        <div>
+          <div class="summary-number">{{ stats().completedChapters }}</div>
+          <div class="summary-label">Capítulos lidos</div>
+        </div>
+        <div class="summary-icon">
+          <mat-icon>rocket_launch</mat-icon>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="metrics-grid">
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-icon">📖</div>
+        <div>
+          <div class="metric-value">{{ stats().completedChapters }}</div>
+          <div class="metric-label">Capítulos lidos</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-icon">📚</div>
+        <div>
+          <div class="metric-value">{{ stats().completedBooks }}</div>
+          <div class="metric-label">Livros completos</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-icon">⏳</div>
+        <div>
+          <div class="metric-value">{{ stats().remainingChapters }}</div>
+          <div class="metric-label">Capítulos restantes</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-icon">🔥</div>
+        <div>
+          <div class="metric-value">{{ stats().streak }}</div>
+          <div class="metric-label">Dias consecutivos</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="search-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Pesquisar livro</mat-label>
+      <input matInput [value]="searchTerm" (input)="searchTerm = $any($event.target).value" />
+      <button mat-icon-button matSuffix aria-label="Buscar livro">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div class="books-grid">
+    @for (book of filteredBooks; track book.id) {
+      <mat-card class="book-card" (click)="openBook(book.id)">
+        <mat-card-content>
+          <div class="book-title">{{ book.name }}</div>
+          <div class="book-meta">{{ book.chapters }} capítulos • {{ book.testament }}</div>
+          <div class="book-progress">
+            <mat-progress-bar mode="determinate" [value]="storageService.getBookProgress(book).progressPercent"></mat-progress-bar>
+          </div>
+          <div class="book-progress-label">{{ storageService.getBookProgress(book).progressPercent }}% concluído</div>
+          <button mat-icon-button aria-label="Abrir livro" class="book-open-button">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <mat-card class="detail-card">
+    <mat-card-title>Última leitura</mat-card-title>
+    <mat-card-content>
+      @if (history().length) {
+        <p>{{ history()[0].completedTime }} • {{ getBookName(history()[0].bookId) }} {{ history()[0].chapterNumber }}</p>
+      } @else {
+        <p>Nenhuma leitura registrada ainda.</p>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>
