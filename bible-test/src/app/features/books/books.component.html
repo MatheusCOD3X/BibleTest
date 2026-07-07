@@ -1,4 +1,8 @@
 <section class="books-shell">
+  <header class="page-header">
+    <h1>Livros</h1>
+  </header>
+
   <div class="action-row">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Pesquisar livro</mat-label>
@@ -7,7 +11,7 @@
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
-    <mat-chip-listbox [value]="filter" (selectionChange)="onFilterChange($event)">
+    <mat-chip-listbox class="filter-chips" [value]="filter" (selectionChange)="onFilterChange($event)">
       <mat-chip-option value="all">Todos</mat-chip-option>
       <mat-chip-option value="old">Antigo Testamento</mat-chip-option>
       <mat-chip-option value="new">Novo Testamento</mat-chip-option>
@@ -17,21 +21,19 @@
     </mat-chip-listbox>
   </div>
 
-  <div class="books-grid">
+  <div class="books-list">
     @for (book of filteredBooks; track book.id) {
-      <mat-card class="book-card">
+      <mat-card class="book-card" role="button" tabindex="0" [routerLink]="['/book', book.id]">
         <mat-card-content>
-          <div class="book-title">{{ book.name }}</div>
-          <div class="metric-label">{{ book.chapters }} capítulos • {{ book.testament }}</div>
+          <div class="book-row">
+            <div>
+              <div class="book-title">{{ book.name }}</div>
+              <div class="book-meta">{{ storageService.getBookProgress(book).completedChapters }}/{{ book.chapters }} capítulos</div>
+            </div>
+            <div class="book-percent">{{ storageService.getBookProgress(book).progressPercent }}%</div>
+          </div>
           <div class="book-progress">
             <mat-progress-bar mode="determinate" [value]="storageService.getBookProgress(book).progressPercent"></mat-progress-bar>
-          </div>
-          <div class="book-progress-label">{{ storageService.getBookProgress(book).progressPercent }}% concluído</div>
-          <div class="book-actions">
-            <button mat-stroked-button [routerLink]="['/book', book.id]">Abrir</button>
-            <button mat-flat-button color="primary" (click)="toggleBookComplete(book)">
-              {{ storageService.getBookProgress(book).completed ? 'Desmarcar' : 'Marcar completo' }}
-            </button>
           </div>
         </mat-card-content>
       </mat-card>

@@ -2,87 +2,105 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 1120px;
+  max-width: 1080px;
   margin: 0 auto;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(2.7rem, 3vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
 }
 
 .action-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
+  flex-direction: column;
+  gap: 18px;
+  align-items: stretch;
 }
 
 .search-field {
   width: 100%;
-  max-width: 520px;
+  max-width: none;
 }
 
-.books-grid {
+.filter-chips {
+  width: 100%;
+}
+
+.books-list {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
 }
 
 .book-card {
-  border-radius: 16px;
-  padding: 22px;
-  background: var(--color-white);
-  box-shadow: var(--shadow);
-  transition: transform 0.2s ease;
+  border-radius: var(--radius-ui);
+  padding: 26px 28px;
+  background: var(--color-surface);
+  box-shadow: 0 16px 36px rgba(16, 32, 58, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .book-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 22px 48px rgba(16, 32, 58, 0.08);
+}
+
+.book-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
 .book-title {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.7rem;
+  font-weight: 800;
   color: var(--color-primary);
-  line-height: 1.3;
+  line-height: 1.1;
 }
 
-.metric-label {
-  color: var(--color-neutral);
-  margin-top: 6px;
-  font-size: 0.95rem;
+.book-meta {
+  color: var(--color-muted);
+  margin-top: 10px;
+  font-size: 1.02rem;
   line-height: 1.6;
 }
 
 .book-progress {
-  margin-top: 16px;
+  margin-top: 20px;
+}
+
+.book-percent {
+  color: var(--color-accent);
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .book-progress-label {
-  margin-top: 10px;
-  color: var(--color-neutral);
+  margin-top: 12px;
+  color: var(--color-muted);
   font-size: 0.92rem;
 }
 
-.book-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.action-row button,
-.book-actions button {
-  min-width: 130px;
+.book-card mat-card-content {
+  padding: 0;
 }
 
 @media (max-width: 760px) {
-  .books-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .action-row,
-  .book-actions {
-    justify-content: stretch;
-  }
-
   .book-card {
-    padding: 18px;
+    padding: 22px;
+  }
+
+  .book-title {
+    font-size: 1.5rem;
+  }
+
+  .book-row {
+    flex-direction: column;
   }
 }

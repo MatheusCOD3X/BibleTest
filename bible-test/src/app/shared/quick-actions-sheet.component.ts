@@ -10,9 +10,9 @@ import { RouterLink } from '@angular/router';
   imports: [MatListModule, MatIconModule, RouterLink],
   template: `
     <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard" (click)="close()">
-        <mat-icon>dashboard</mat-icon>
-        <span>Dashboard</span>
+      <a mat-list-item routerLink="/" (click)="close()">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
       </a>
       <a mat-list-item routerLink="/books" (click)="close()">
         <mat-icon>menu_book</mat-icon>

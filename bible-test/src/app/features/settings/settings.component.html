@@ -3,7 +3,7 @@
     <mat-card-title>Configurações</mat-card-title>
     <mat-card-content>
       <div class="settings-row">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="field-block">
           <mat-label>Tema</mat-label>
           <mat-select [(ngModel)]="settings().theme">
             <mat-option value="light">Claro</mat-option>
@@ -11,7 +11,7 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="field-block">
           <mat-label>Fonte</mat-label>
           <mat-select [(ngModel)]="settings().fontFamily">
             <mat-option value="inter">Inter</mat-option>
@@ -20,17 +20,22 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="field-block">
           <mat-label>Tamanho</mat-label>
-          <input matInput type="number" [(ngModel)]="settings().fontSize" />
+          <mat-select [(ngModel)]="settings().fontSize">
+            <mat-option [value]="14">14</mat-option>
+            <mat-option [value]="16">16</mat-option>
+            <mat-option [value]="18">18</mat-option>
+            <mat-option [value]="20">20</mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
 
-      <mat-slide-toggle [(ngModel)]="settings().animations">Animações</mat-slide-toggle>
+      <mat-slide-toggle class="animations-toggle" [(ngModel)]="settings().animations">Animações</mat-slide-toggle>
 
-      <div class="action-row" style="margin-top: 16px;">
-        <button mat-raised-button color="primary" (click)="saveSettings()">Salvar</button>
-        <button mat-stroked-button color="warn" (click)="resetApp()">
+      <div class="action-row">
+        <button mat-raised-button color="primary" class="save-button" (click)="saveSettings()">Salvar</button>
+        <button mat-stroked-button color="warn" class="reset-button" (click)="resetApp()">
           {{ resetConfirm() ? 'Confirmar reset' : 'Resetar aplicativo' }}
         </button>
       </div>

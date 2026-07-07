@@ -1,0 +1,72 @@
+<section class="home-shell">
+  <mat-card class="home-hero-card">
+    <div class="hero-copy">
+      <h1>{{ greeting() }}, {{ userName }}</h1>
+      <p>Continue sua jornada de leitura</p>
+      <button mat-raised-button color="primary" class="hero-cta" (click)="continueReading()">
+        Continuar Leitura
+      </button>
+    </div>
+    <div class="hero-cross" aria-hidden="true">✝</div>
+  </mat-card>
+
+  <div class="section-title">
+    <mat-icon>menu_book</mat-icon>
+    <span>Leitura de Hoje</span>
+  </div>
+  <mat-card class="info-card" role="button" tabindex="0" (click)="continueReading()">
+    <div class="info-icon"><mat-icon>book</mat-icon></div>
+    <div class="info-content">
+      <div class="info-headline">{{ currentReading().book.name }} - Capítulo {{ currentReading().chapterNumber }}</div>
+      <mat-progress-bar mode="determinate" [value]="currentReading().progressPercent"></mat-progress-bar>
+      <div class="info-caption">{{ currentReading().completedChapters }} de {{ currentReading().totalChapters }} capítulos lidos</div>
+    </div>
+    <mat-icon class="info-chevron">chevron_right</mat-icon>
+  </mat-card>
+
+  <div class="section-title">
+    <mat-icon>local_fire_department</mat-icon>
+    <span>Sequência Atual</span>
+  </div>
+  <mat-card class="info-card streak-card">
+    <div class="info-icon"><mat-icon>local_fire_department</mat-icon></div>
+    <div class="info-content">
+      <div class="streak-value">{{ streak() }} dias consecutivos</div>
+      <div class="info-caption">Continue assim! Voce esta indo muito bem.</div>
+    </div>
+    <mat-icon class="info-chevron">chevron_right</mat-icon>
+  </mat-card>
+
+  <div class="section-title">
+    <mat-icon>auto_awesome</mat-icon>
+    <span>Sugestão do Dia</span>
+  </div>
+  <mat-card class="verse-card">
+    <div class="verse-icon">“</div>
+    <div class="verse-content">
+      <p>{{ dailyVerse().text }}</p>
+      <div class="verse-reference">{{ dailyVerse().reference }}</div>
+    </div>
+    <button mat-icon-button aria-label="Favoritar versículo">
+      <mat-icon>favorite_border</mat-icon>
+    </button>
+  </mat-card>
+
+  <mat-card class="quick-stats-card">
+    <div class="quick-stat-item">
+      <div class="quick-icon"><mat-icon>menu_book</mat-icon></div>
+      <div>
+        <div class="quick-label">Capítulos Hoje</div>
+        <div class="quick-value">{{ chaptersToday() }}</div>
+      </div>
+    </div>
+    <div class="quick-divider"></div>
+    <div class="quick-stat-item">
+      <div class="quick-icon"><mat-icon>schedule</mat-icon></div>
+      <div>
+        <div class="quick-label">Tempo de Leitura</div>
+        <div class="quick-value">{{ readingMinutesToday() }} min</div>
+      </div>
+    </div>
+  </mat-card>
+</section>

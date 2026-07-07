@@ -2,103 +2,194 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 1120px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 
-.chart-grid {
+.page-header {
+  text-align: left;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(2.3rem, 3vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.page-header p {
+  margin: 10px 0 0;
+  color: var(--color-muted);
+  font-size: 1.02rem;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+  gap: 16px;
+}
+
+.progress-card,
+.summary-card,
+.metric-card,
+.detail-card {
+  border-radius: var(--radius-ui);
+  background: var(--color-surface);
+  box-shadow: 0 16px 36px rgba(16, 32, 58, 0.07);
+}
+
+.progress-card {
+  padding: 22px;
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(2, minmax(300px, 1fr));
+}
+
+.progress-card-header h3,
+.summary-card h3 {
+  margin: 0;
+  color: #0d1f5a;
+}
+
+.progress-card-header p {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+}
+
+.progress-ring-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.progress-inner {
+  position: absolute;
+  text-align: center;
+}
+
+.progress-value {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #0d1f5a;
+}
+
+.progress-caption {
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.summary-card {
+  padding: 22px;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid #e7edf5;
+  color: var(--color-muted);
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item strong {
+  color: #0d1f5a;
 }
 
 .stats-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.chart-card,
-.metric-card,
-.detail-card,
-mat-card {
-  border-radius: 16px;
-  background: var(--color-white);
-  box-shadow: var(--shadow);
-  transition: transform 0.2s ease;
-}
-
-.chart-card:hover,
-.metric-card:hover,
-.detail-card:hover,
-mat-card:hover {
-  transform: translateY(-2px);
-}
-
-.chart-card {
-  min-height: 300px;
-  padding: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .metric-card {
+  min-height: 200px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 48px rgba(16, 32, 58, 0.09);
+}
+
+.metric-card mat-card-content {
+  height: 100%;
   padding: 22px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 14px;
-  min-height: 160px;
+}
+
+.metric-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-ui);
+  background: #eaf4f5;
+  display: grid;
+  place-items: center;
+  color: #5ea9ae;
+}
+
+.metric-icon mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
 }
 
 .metric-value {
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--color-primary);
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #0d1f5a;
 }
 
 .metric-label {
-  color: var(--color-neutral);
-  font-size: 0.95rem;
-}
-
-.chart-title {
+  color: var(--color-muted);
   font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: var(--color-primary);
-}
-
-.book-progress-row {
-  margin-bottom: 18px;
-}
-
-.chapter-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
 }
 
 .detail-card {
   padding: 22px;
 }
 
-.detail-card p,
-.detail-card strong {
+.book-progress-row {
+  margin-bottom: 14px;
+}
+
+.book-progress-row:last-child {
+  margin-bottom: 0;
+}
+
+.book-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
   color: var(--color-primary);
 }
 
-@media (max-width: 1040px) {
-  .chart-grid {
+.detail-card p {
+  margin: 0 0 10px;
+  color: var(--color-primary);
+}
+
+.detail-card p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 860px) {
+  .overview-grid,
+  .stats-grid {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 720px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .chart-card {
-    min-height: 240px;
+@media (max-width: 760px) {
+  .metric-card {
+    min-height: 180px;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { BibleDataService } from './core/services/bible-data.service';
+import { StorageService } from './core/services/storage.service';
 import { QuickActionsSheetComponent } from './shared/quick-actions-sheet.component';
 
 @Component({
@@ -35,9 +37,12 @@ import { QuickActionsSheetComponent } from './shared/quick-actions-sheet.compone
 export class AppComponent {
   title = 'Bible Tracker';
   readonly isMobile = signal(false);
+  readonly recentHistory = computed(() => this.storageService.historySignal().slice(0, 3));
 
   constructor(
     private readonly bottomSheet: MatBottomSheet,
+    readonly bibleDataService: BibleDataService,
+    readonly storageService: StorageService,
     breakpointObserver: BreakpointObserver
   ) {
     breakpointObserver

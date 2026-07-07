@@ -2,15 +2,18 @@
   <mat-card class="backup-card">
     <mat-card-title>Backup e restauração</mat-card-title>
     <mat-card-content>
-      <p>Exporte seu progresso em JSON e restaure quando necessário.</p>
-      <div class="action-row" style="margin-top: 12px;">
-        <button mat-raised-button color="primary" (click)="exportBackup()">Exportar JSON</button>
-        <button mat-stroked-button (click)="importBackup()">Importar JSON</button>
+      <p class="intro-copy">Exporte seu progresso em JSON e restaure quando necessário</p>
+
+      <div class="action-row">
+        <button mat-stroked-button class="backup-action" (click)="exportBackup()">Exportar JSON</button>
+        <button mat-stroked-button class="backup-action" (click)="importBackup()">Importar JSON</button>
       </div>
+
+      <h3>Dados de backup</h3>
       <mat-form-field appearance="outline" class="backup-textarea">
-        <mat-label>Dados de backup</mat-label>
         <textarea matInput rows="10" [value]="backupData" (input)="backupData = $any($event.target).value"></textarea>
       </mat-form-field>
+
       @if (importError) {
         <p class="error-text">{{ importError }}</p>
       }

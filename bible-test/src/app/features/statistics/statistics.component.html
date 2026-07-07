@@ -1,53 +1,79 @@
 <section class="stats-page">
-  <div class="chart-grid">
-    <mat-card>
-      <mat-card-title>Distribuição de capítulos</mat-card-title>
-      <mat-card-content class="chart-card">
-        <canvas
-          baseChart
-          [data]="chapterChartData()"
-          [options]="chartOptions"
-          [type]="chapterChartType"
-        ></canvas>
-      </mat-card-content>
+  <header class="page-header">
+    <h1>Dashboard e Estatísticas</h1>
+    <p>Progresso geral, métricas acumuladas e histórico em uma única visão.</p>
+  </header>
+
+  <div class="overview-grid">
+    <mat-card class="progress-card">
+      <div class="progress-card-header">
+        <h3>Progresso geral</h3>
+        <p>{{ stats().completedChapters }} de {{ stats().totalChapters }} capítulos concluídos</p>
+      </div>
+      <div class="progress-ring-wrap">
+        <mat-progress-spinner
+          class="hero-spinner"
+          color="primary"
+          mode="determinate"
+          [value]="stats().progressPercent"
+          diameter="146"
+          strokeWidth="12">
+        </mat-progress-spinner>
+        <div class="progress-inner">
+          <div class="progress-value">{{ stats().progressPercent }}%</div>
+          <div class="progress-caption">Concluído</div>
+        </div>
+      </div>
     </mat-card>
 
-    <mat-card>
-      <mat-card-title>Top livros por progresso</mat-card-title>
-      <mat-card-content class="chart-card">
-        <canvas
-          baseChart
-          [data]="bookProgressChartData()"
-          [options]="chartOptions"
-          [type]="bookProgressChartType"
-        ></canvas>
-      </mat-card-content>
+    <mat-card class="summary-card">
+      <h3>Resumo acumulado</h3>
+      <div class="summary-item">
+        <span>Total de capítulos</span>
+        <strong>{{ stats().totalChapters }}</strong>
+      </div>
+      <div class="summary-item">
+        <span>Capítulos restantes</span>
+        <strong>{{ stats().remainingChapters }}</strong>
+      </div>
+      <div class="summary-item">
+        <span>Livros iniciados</span>
+        <strong>{{ stats().startedBooks }}</strong>
+      </div>
+      <div class="summary-item">
+        <span>Tempo estimado</span>
+        <strong>{{ stats().estimatedRemainingTime }}</strong>
+      </div>
     </mat-card>
   </div>
 
   <div class="stats-grid">
     <mat-card class="metric-card">
       <mat-card-content>
-        <div class="metric-value">{{ stats().completedChapters }}</div>
-        <div class="metric-label">Capítulos lidos</div>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="metric-card">
-      <mat-card-content>
-        <div class="metric-value">{{ stats().remainingChapters }}</div>
-        <div class="metric-label">Capítulos restantes</div>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="metric-card">
-      <mat-card-content>
+        <div class="metric-icon"><mat-icon>menu_book</mat-icon></div>
         <div class="metric-value">{{ stats().completedBooks }}</div>
-        <div class="metric-label">Livros completos</div>
+        <div class="metric-label">Livros Completos</div>
       </mat-card-content>
     </mat-card>
     <mat-card class="metric-card">
       <mat-card-content>
+        <div class="metric-icon"><mat-icon>event</mat-icon></div>
         <div class="metric-value">{{ stats().streak }}</div>
-        <div class="metric-label">Dias consecutivos</div>
+        <div class="metric-label">Dias Consecutivos</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-icon"><mat-icon>book</mat-icon></div>
+        <div class="metric-value">{{ stats().completedChapters }}</div>
+        <div class="metric-label">Capítulos Lidos</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="metric-icon"><mat-icon>schedule</mat-icon></div>
+        <div class="metric-value">{{ stats().remainingChapters }}</div>
+        <div class="metric-label">Capítulos Restantes</div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -55,9 +81,9 @@
   <mat-card class="detail-card">
     <mat-card-title>Progresso por livro</mat-card-title>
     <mat-card-content>
-      @for (item of progressByBook(); track item.book.id) {
+      @for (item of topProgress(); track item.book.id) {
         <div class="book-progress-row">
-          <div class="chapter-actions">
+          <div class="book-row-head">
             <strong>{{ item.book.name }}</strong>
             <span>{{ item.progress.progressPercent }}%</span>
           </div>
@@ -68,14 +94,14 @@
   </mat-card>
 
   <mat-card class="detail-card">
-    <mat-card-title>Histórico recente</mat-card-title>
+    <mat-card-title>Últimas leituras</mat-card-title>
     <mat-card-content>
       @if (history().length) {
-        @for (entry of history().slice(0, 8); track entry.id) {
-          <p>{{ entry.completedTime }} • {{ bibleDataService.getBookById(entry.bookId)?.name }} {{ entry.chapterNumber }}</p>
+        @for (entry of history().slice(0, 6); track entry.id) {
+          <p>{{ entry.completedTime }} • {{ getBookName(entry.bookId) }} {{ entry.chapterNumber }}</p>
         }
       } @else {
-        <p>Nenhum capítulo concluído ainda.</p>
+        <p>Nenhuma leitura registrada ainda.</p>
       }
     </mat-card-content>
   </mat-card>
