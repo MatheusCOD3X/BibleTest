@@ -1,12 +1,21 @@
 {
   "name": "bible-test",
-  "version": "0.0.0",
+  "version": "0.5.1",
   "scripts": {
     "ng": "ng",
+    "sync:version": "node scripts/sync-version.cjs",
+    "prestart": "npm run sync:version",
     "start": "ng serve",
+    "prebuild": "npm run sync:version",
     "build": "ng build",
+    "prewatch": "npm run sync:version",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "pretest": "npm run sync:version",
+    "test": "ng test",
+    "version": "npm run sync:version && git add src/environments/version.ts",
+    "release:patch": "npm version patch -m \"chore(release): %s\"",
+    "release:minor": "npm version minor -m \"chore(release): %s\"",
+    "release:major": "npm version major -m \"chore(release): %s\""
   },
   "private": true,
   "dependencies": {

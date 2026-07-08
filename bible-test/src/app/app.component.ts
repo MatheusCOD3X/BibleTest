@@ -14,6 +14,7 @@ import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-s
 import { BibleDataService } from './core/services/bible-data.service';
 import { StorageService } from './core/services/storage.service';
 import { QuickActionsSheetComponent } from './shared/quick-actions-sheet.component';
+import { APP_VERSION } from '../environments/version';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ import { QuickActionsSheetComponent } from './shared/quick-actions-sheet.compone
 })
 export class AppComponent {
   title = 'Bible Tracker';
+  readonly appVersion = APP_VERSION;
   readonly isMobile = signal(false);
   readonly recentHistory = computed(() => this.storageService.historySignal().slice(0, 3));
 
