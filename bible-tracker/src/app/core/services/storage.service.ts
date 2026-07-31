@@ -5,6 +5,7 @@ import { AppSettings, BibleBook, BookProgress, ChapterProgress, ReadingHistoryEn
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   private readonly storageKey = 'bible-pwa-state-v1';
+  private readonly minutesPerChapter = 4;
   private readonly progressSubject = new BehaviorSubject<Map<string, ChapterProgress>>(new Map());
   readonly progressSignal = signal<Map<string, ChapterProgress>>(new Map());
   readonly settingsSignal = signal<AppSettings>({
@@ -15,18 +16,41 @@ export class StorageService {
     language: 'pt-BR'
   });
   readonly historySignal = signal<ReadingHistoryEntry[]>([]);
+  private saveDebounceHandle: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     this.load();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', () => this.flushPendingSave());
+    }
   }
 
   save(): void {
+    clearTimeout(this.saveDebounceHandle);
+    this.saveDebounceHandle = undefined;
     const state = {
       progress: Array.from(this.progressSignal().entries()).map(([id, chapter]) => ({ ...chapter })),
       settings: this.settingsSignal(),
       history: this.historySignal()
     };
     localStorage.setItem(this.storageKey, JSON.stringify(state));
+  }
+
+  /** Persists shortly after the last call, avoiding a write on every keystroke (e.g. notes). */
+  private scheduleSave(delay = 400): void {
+    clearTimeout(this.saveDebounceHandle);
+    this.saveDebounceHandle = setTimeout(() => this.save(), delay);
+  }
+
+  private flushPendingSave(): void {
+    if (this.saveDebounceHandle) {
+      this.save();
+    }
+  }
+
+  updateSettings(partial: Partial<AppSettings>): void {
+    this.settingsSignal.update((current) => ({ ...current, ...partial }));
+    this.save();
   }
 
   load(): void {
@@ -112,8 +136,10 @@ export class StorageService {
     next.set(id, entry);
     this.progressSignal.set(next);
     this.progressSubject.next(next);
-    this.save();
 
+    // Drop any previous history entries for this chapter first so re-toggling never
+    // creates duplicates or leaves stale entries behind when a chapter is unchecked.
+    const historyWithoutChapter = this.historySignal().filter((historyEntry) => !(historyEntry.bookId === book.id && historyEntry.chapterNumber === chapterNumber));
     if (completed) {
       const historyEntry: ReadingHistoryEntry = {
         id: `${id}:${now.getTime()}`,
@@ -123,9 +149,11 @@ export class StorageService {
         completedTime: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
         notes
       };
-      this.historySignal.set([historyEntry, ...this.historySignal()]);
-      this.save();
+      this.historySignal.set([historyEntry, ...historyWithoutChapter]);
+    } else {
+      this.historySignal.set(historyWithoutChapter);
     }
+    this.save();
   }
 
   updateNotes(book: BibleBook, chapterNumber: number, notes: string): void {
@@ -139,11 +167,15 @@ export class StorageService {
     next.set(id, updated);
     this.progressSignal.set(next);
     this.progressSubject.next(next);
-    this.save();
+    this.scheduleSave();
   }
 
   getProgress(): Observable<Map<string, ChapterProgress>> {
     return this.progressSubject.asObservable();
+  }
+
+  getMinutesForChapters(chapters: number): number {
+    return chapters * this.minutesPerChapter;
   }
 
   getStats(books: BibleBook[]): ReadingStats {
@@ -195,60 +227,112 @@ export class StorageService {
 
   markBookComplete(book: BibleBook): void {
     const next = new Map(this.progressSignal());
+    const now = new Date();
+    const completedTime = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const newEntries: ReadingHistoryEntry[] = [];
+
     for (let index = 1; index <= book.chapters; index++) {
       const id = `${book.id}:${index}`;
       const existing = next.get(id);
       if (!existing?.completed) {
-        const now = new Date();
         next.set(id, {
           id,
           bookId: book.id,
           chapterNumber: index,
           completed: true,
           completedAt: now.toISOString(),
-          completedTime: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+          completedTime,
+          notes: existing?.notes || ''
+        });
+        newEntries.push({
+          id: `${id}:${now.getTime()}`,
+          bookId: book.id,
+          chapterNumber: index,
+          completedAt: now.toISOString(),
+          completedTime,
           notes: existing?.notes || ''
         });
       }
     }
+
     this.progressSignal.set(next);
     this.progressSubject.next(next);
+
+    if (newEntries.length) {
+      const newChapters = new Set(newEntries.map((entry) => entry.chapterNumber));
+      const historyWithoutNewChapters = this.historySignal().filter((entry) => !(entry.bookId === book.id && newChapters.has(entry.chapterNumber)));
+      this.historySignal.set([...newEntries.reverse(), ...historyWithoutNewChapters]);
+    }
     this.save();
   }
 
   unmarkBookComplete(book: BibleBook): void {
     const next = new Map(this.progressSignal());
+    const removedChapters = new Set<number>();
     for (let index = 1; index <= book.chapters; index++) {
       const id = `${book.id}:${index}`;
       const existing = next.get(id);
       if (existing?.completed) {
         next.delete(id);
+        removedChapters.add(index);
       }
     }
     this.progressSignal.set(next);
     this.progressSubject.next(next);
+
+    if (removedChapters.size) {
+      this.historySignal.set(this.historySignal().filter((entry) => !(entry.bookId === book.id && removedChapters.has(entry.chapterNumber))));
+    }
     this.save();
   }
 
   markAllComplete(books: BibleBook[]): void {
     const next = new Map(this.progressSignal());
+    const now = new Date();
+    const completedTime = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const newEntriesByBook = new Map<string, ReadingHistoryEntry[]>();
+
     books.forEach((book) => {
+      const newEntries: ReadingHistoryEntry[] = [];
       for (let index = 1; index <= book.chapters; index++) {
         const id = `${book.id}:${index}`;
-        const now = new Date();
-        next.set(id, {
-          id,
-          bookId: book.id,
-          chapterNumber: index,
-          completed: true,
-          completedAt: now.toISOString(),
-          completedTime: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-          notes: next.get(id)?.notes || ''
-        });
+        const existing = next.get(id);
+        if (!existing?.completed) {
+          next.set(id, {
+            id,
+            bookId: book.id,
+            chapterNumber: index,
+            completed: true,
+            completedAt: now.toISOString(),
+            completedTime,
+            notes: existing?.notes || ''
+          });
+          newEntries.push({
+            id: `${id}:${now.getTime()}`,
+            bookId: book.id,
+            chapterNumber: index,
+            completedAt: now.toISOString(),
+            completedTime,
+            notes: existing?.notes || ''
+          });
+        }
+      }
+      if (newEntries.length) {
+        newEntriesByBook.set(book.id, newEntries);
       }
     });
+
     this.progressSignal.set(next);
     this.progressSubject.next(next);
+
+    if (newEntriesByBook.size) {
+      const historyWithoutNewChapters = this.historySignal().filter((entry) => {
+        const newEntries = newEntriesByBook.get(entry.bookId);
+        return !newEntries?.some((newEntry) => newEntry.chapterNumber === entry.chapterNumber);
+      });
+      const allNewEntries = Array.from(newEntriesByBook.values()).flatMap((entries) => entries.reverse());
+      this.historySignal.set([...allNewEntries, ...historyWithoutNewChapters]);
+    }
     this.save();
   }
 
@@ -264,17 +348,27 @@ export class StorageService {
   }
 
   private calculateStreak(): number {
-    const history = this.historySignal().slice().sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
-    if (!history.length) {
+    const dates = Array.from(new Set(this.historySignal().map((entry) => entry.completedAt.split('T')[0]))).sort();
+    if (!dates.length) {
+      return 0;
+    }
+
+    const oneDayMs = 1000 * 60 * 60 * 24;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const lastActiveDay = new Date(dates[dates.length - 1]);
+    const daysSinceLastActivity = Math.round((today.getTime() - lastActiveDay.getTime()) / oneDayMs);
+
+    // If the last completed chapter wasn't today or yesterday, the streak is broken.
+    if (daysSinceLastActivity > 1) {
       return 0;
     }
 
     let streak = 1;
-    const dates = Array.from(new Set(history.map((entry) => entry.completedAt.split('T')[0]))).sort();
     for (let index = dates.length - 2; index >= 0; index--) {
       const current = new Date(dates[index]);
       const next = new Date(dates[index + 1]);
-      const diff = Math.round((next.getTime() - current.getTime()) / (1000 * 60 * 60 * 24));
+      const diff = Math.round((next.getTime() - current.getTime()) / oneDayMs);
       if (diff === 1) {
         streak++;
       } else {
@@ -285,7 +379,7 @@ export class StorageService {
   }
 
   private estimateRemainingTime(remaining: number): string {
-    const minutes = remaining * 3;
+    const minutes = remaining * this.minutesPerChapter;
     if (minutes < 60) {
       return `${minutes} min`;
     }

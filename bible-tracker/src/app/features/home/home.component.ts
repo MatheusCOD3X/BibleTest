@@ -44,14 +44,18 @@ export class HomeComponent {
       const book = this.bibleDataService.getBookById(latest.bookId);
       if (book) {
         const progress = this.storageService.getBookProgress(book);
-        const nextChapter = Math.min(latest.chapterNumber + 1, book.chapters);
-        return {
-          book,
-          chapterNumber: nextChapter,
-          progressPercent: progress.progressPercent,
-          completedChapters: progress.completedChapters,
-          totalChapters: progress.totalChapters
-        };
+        // If the book from the latest entry is now fully completed, move on to the
+        // next pending book instead of re-suggesting an already-finished chapter.
+        if (!progress.completed) {
+          const nextChapter = Math.min(latest.chapterNumber + 1, book.chapters);
+          return {
+            book,
+            chapterNumber: nextChapter,
+            progressPercent: progress.progressPercent,
+            completedChapters: progress.completedChapters,
+            totalChapters: progress.totalChapters
+          };
+        }
       }
     }
 
@@ -75,7 +79,7 @@ export class HomeComponent {
 
   readonly chaptersToday = computed(() => this.todayHistory().length);
 
-  readonly readingMinutesToday = computed(() => this.chaptersToday() * 5);
+  readonly readingMinutesToday = computed(() => this.storageService.getMinutesForChapters(this.chaptersToday()));
 
   readonly dailyVerse = computed<DailyVerse>(() => {
     const verses: DailyVerse[] = [

@@ -12,6 +12,35 @@
   --radius-card: var(--radius-ui);
   --radius-field: var(--radius-ui);
   --radius-button: var(--radius-ui);
+  --app-font-size: 16px;
+}
+
+body.theme-dark {
+  --color-surface: #172033;
+  --color-primary: #eef2f8;
+  --color-accent: #5fc3c9;
+  --color-accent-strong: #7fd6db;
+  --color-muted: #a7b3c4;
+  --color-border: #2b3750;
+  --color-bg: #0e1524;
+  --color-bg-soft: #131b2c;
+  --color-shadow: rgba(0, 0, 0, 0.35);
+}
+
+body.font-serif {
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+body.font-mono {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+}
+
+body.no-animations,
+body.no-animations * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
 }
 
 * {
@@ -31,12 +60,17 @@ body {
 
 body {
   font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
-  font-size: 16px;
+  font-size: var(--app-font-size, 16px);
   line-height: 1.6;
   letter-spacing: 0.01em;
   background: linear-gradient(180deg, #f7f9fd 0%, #eef4fb 100%);
   color: var(--color-primary);
   text-rendering: optimizeLegibility;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body.theme-dark {
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-soft) 100%);
 }
 
 button,

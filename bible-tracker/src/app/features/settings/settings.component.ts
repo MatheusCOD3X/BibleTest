@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppSettings } from '../../models/bible.models';
 import { StorageService } from '../../core/services/storage.service';
 
 @Component({
@@ -20,12 +21,17 @@ import { StorageService } from '../../core/services/storage.service';
 export class SettingsComponent {
   readonly settings;
   readonly resetConfirm = signal(false);
+  private resetConfirmTimeout: ReturnType<typeof setTimeout> | undefined;
 
   constructor(
     private readonly storageService: StorageService,
     private readonly snackbar: MatSnackBar
   ) {
     this.settings = this.storageService.settingsSignal;
+  }
+
+  updateSetting<K extends keyof AppSettings>(key: K, value: AppSettings[K]): void {
+    this.storageService.updateSettings({ [key]: value } as Partial<AppSettings>);
   }
 
   saveSettings(): void {
@@ -36,9 +42,13 @@ export class SettingsComponent {
   resetApp(): void {
     if (!this.resetConfirm()) {
       this.resetConfirm.set(true);
+      clearTimeout(this.resetConfirmTimeout);
+      this.resetConfirmTimeout = setTimeout(() => this.resetConfirm.set(false), 4000);
       return;
     }
 
+    clearTimeout(this.resetConfirmTimeout);
+    this.resetConfirm.set(false);
     this.storageService.resetProgress();
     this.snackbar.open('App resetado', 'Fechar', { duration: 1600 });
   }

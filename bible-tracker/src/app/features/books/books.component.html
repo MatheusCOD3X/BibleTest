@@ -6,12 +6,12 @@
   <div class="action-row">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Pesquisar livro</mat-label>
-      <input matInput [value]="searchTerm" (input)="searchTerm = $any($event.target).value" />
+      <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
       <button mat-icon-button matSuffix aria-label="Buscar livro">
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
-    <mat-chip-listbox class="filter-chips" [value]="filter" (selectionChange)="onFilterChange($event)">
+    <mat-chip-listbox class="filter-chips" [value]="filter()" (selectionChange)="onFilterChange($event)">
       <mat-chip-option value="all">Todos</mat-chip-option>
       <mat-chip-option value="old">Antigo Testamento</mat-chip-option>
       <mat-chip-option value="new">Novo Testamento</mat-chip-option>
@@ -22,7 +22,7 @@
   </div>
 
   <div class="books-list">
-    @for (book of filteredBooks; track book.id) {
+    @for (book of filteredBooks(); track book.id) {
       <mat-card class="book-card" role="button" tabindex="0" [routerLink]="['/book', book.id]">
         <mat-card-content>
           <div class="book-row">

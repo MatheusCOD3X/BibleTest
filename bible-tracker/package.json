@@ -1,5 +1,5 @@
 {
-  "name": "bible-test",
+  "name": "bible-tracker",
   "version": "0.5.1",
   "scripts": {
     "ng": "ng",

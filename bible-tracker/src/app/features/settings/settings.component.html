@@ -5,7 +5,7 @@
       <div class="settings-row">
         <mat-form-field appearance="outline" class="field-block">
           <mat-label>Tema</mat-label>
-          <mat-select [(ngModel)]="settings().theme">
+          <mat-select [ngModel]="settings().theme" (ngModelChange)="updateSetting('theme', $event)">
             <mat-option value="light">Claro</mat-option>
             <mat-option value="dark">Escuro</mat-option>
           </mat-select>
@@ -13,7 +13,7 @@
 
         <mat-form-field appearance="outline" class="field-block">
           <mat-label>Fonte</mat-label>
-          <mat-select [(ngModel)]="settings().fontFamily">
+          <mat-select [ngModel]="settings().fontFamily" (ngModelChange)="updateSetting('fontFamily', $event)">
             <mat-option value="inter">Inter</mat-option>
             <mat-option value="serif">Serif</mat-option>
             <mat-option value="mono">Mono</mat-option>
@@ -22,7 +22,7 @@
 
         <mat-form-field appearance="outline" class="field-block">
           <mat-label>Tamanho</mat-label>
-          <mat-select [(ngModel)]="settings().fontSize">
+          <mat-select [ngModel]="settings().fontSize" (ngModelChange)="updateSetting('fontSize', $event)">
             <mat-option [value]="14">14</mat-option>
             <mat-option [value]="16">16</mat-option>
             <mat-option [value]="18">18</mat-option>
@@ -31,7 +31,7 @@
         </mat-form-field>
       </div>
 
-      <mat-slide-toggle class="animations-toggle" [(ngModel)]="settings().animations">Animações</mat-slide-toggle>
+      <mat-slide-toggle class="animations-toggle" [ngModel]="settings().animations" (ngModelChange)="updateSetting('animations', $event)">Animações</mat-slide-toggle>
 
       <div class="action-row">
         <button mat-raised-button color="primary" class="save-button" (click)="saveSettings()">Salvar</button>

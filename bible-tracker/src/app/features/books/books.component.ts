@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,8 @@ import { BibleBook } from '../../models/bible.models';
 import { BibleDataService } from '../../core/services/bible-data.service';
 import { StorageService } from '../../core/services/storage.service';
 
+type BookFilter = 'all' | 'old' | 'new' | 'completed' | 'progress' | 'not-started';
+
 @Component({
   selector: 'app-books',
   standalone: true,
@@ -21,8 +23,17 @@ import { StorageService } from '../../core/services/storage.service';
 })
 export class BooksComponent {
   readonly books: BibleBook[];
-  filter: 'all' | 'old' | 'new' | 'completed' | 'progress' | 'not-started' = 'all';
-  searchTerm = '';
+  readonly filter = signal<BookFilter>('all');
+  readonly searchTerm = signal('');
+
+  readonly filteredBooks = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    return this.books.filter((book) => {
+      const matchesText = book.name.toLowerCase().includes(term);
+      const matchesFilter = this.matchesFilter(book);
+      return matchesText && matchesFilter;
+    });
+  });
 
   constructor(
     readonly bibleDataService: BibleDataService,
@@ -31,18 +42,9 @@ export class BooksComponent {
     this.books = this.bibleDataService.books;
   }
 
-  get filteredBooks() {
-    const term = this.searchTerm.toLowerCase();
-    return this.books.filter((book) => {
-      const matchesText = book.name.toLowerCase().includes(term);
-      const matchesFilter = this.matchesFilter(book);
-      return matchesText && matchesFilter;
-    });
-  }
-
   matchesFilter(book: BibleBook): boolean {
     const progress = this.storageService.getBookProgress(book);
-    switch (this.filter) {
+    switch (this.filter()) {
       case 'old':
         return book.testament === 'Antigo';
       case 'new':
@@ -59,7 +61,7 @@ export class BooksComponent {
   }
 
   onFilterChange(event: any): void {
-    this.filter = event.value as 'all' | 'old' | 'new' | 'completed' | 'progress' | 'not-started';
+    this.filter.set(event.value as BookFilter);
   }
 
   toggleBookComplete(book: BibleBook): void {

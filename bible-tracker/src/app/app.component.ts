@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -55,11 +55,31 @@ export class AppComponent {
         takeUntilDestroyed()
       )
       .subscribe((matches) => this.isMobile.set(matches));
+
+    effect(() => this.applySettingsToDocument());
   }
 
   openQuickActions(): void {
     this.bottomSheet.open(QuickActionsSheetComponent, {
       panelClass: 'quick-actions-sheet'
     });
+  }
+
+  private applySettingsToDocument(): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const settings = this.storageService.settingsSignal();
+    const body = document.body;
+
+    body.classList.toggle('theme-dark', settings.theme === 'dark');
+    body.classList.toggle('theme-light', settings.theme !== 'dark');
+
+    body.classList.remove('font-inter', 'font-serif', 'font-mono');
+    body.classList.add(`font-${settings.fontFamily}`);
+
+    body.style.setProperty('--app-font-size', `${settings.fontSize}px`);
+
+    body.classList.toggle('no-animations', !settings.animations);
   }
 }
