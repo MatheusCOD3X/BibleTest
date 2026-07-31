@@ -6,13 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
 import { BibleDataService } from '../../core/services/bible-data.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { StorageService } from '../../core/services/storage.service';
 import { BibleBook, ReadingHistoryEntry, ReadingStats } from '../../models/bible.models';
-
-interface DailyVerse {
-  text: string;
-  reference: string;
-}
+import { DailyVerse } from '../../core/i18n/translations';
 
 @Component({
   selector: 'app-home',
@@ -29,13 +26,14 @@ export class HomeComponent {
 
   readonly greeting = computed(() => {
     const hour = new Date().getHours();
+    const texts = this.i18n.t().home;
     if (hour < 12) {
-      return 'Bom dia';
+      return texts.greetingMorning;
     }
     if (hour < 18) {
-      return 'Boa tarde';
+      return texts.greetingAfternoon;
     }
-    return 'Boa noite';
+    return texts.greetingEvening;
   });
 
   readonly currentReading = computed(() => {
@@ -82,13 +80,7 @@ export class HomeComponent {
   readonly readingMinutesToday = computed(() => this.storageService.getMinutesForChapters(this.chaptersToday()));
 
   readonly dailyVerse = computed<DailyVerse>(() => {
-    const verses: DailyVerse[] = [
-      { text: 'Lampada para os meus pes e a tua palavra, e luz para o meu caminho.', reference: 'Salmos 119:105' },
-      { text: 'Posso todas as coisas naquele que me fortalece.', reference: 'Filipenses 4:13' },
-      { text: 'O Senhor e o meu pastor; nada me faltara.', reference: 'Salmos 23:1' },
-      { text: 'Entrega o teu caminho ao Senhor; confia nele.', reference: 'Salmos 37:5' },
-      { text: 'Alegrei-me com os que me disseram: Vamos a casa do Senhor.', reference: 'Salmos 122:1' }
-    ];
+    const verses = this.i18n.t().home.dailyVerses;
 
     // Conta quantos dias já se passaram desde 1º de janeiro ("dia do ano") e usa o resto da
     // divisão (%) pelo tamanho da lista para sempre escolher o mesmo versículo no mesmo dia,
@@ -103,7 +95,8 @@ export class HomeComponent {
   constructor(
     private readonly router: Router,
     readonly bibleDataService: BibleDataService,
-    readonly storageService: StorageService
+    readonly storageService: StorageService,
+    readonly i18n: I18nService
   ) {
     this.books = this.bibleDataService.books;
     this.stats = computed(() => this.storageService.getStats(this.bibleDataService.books));

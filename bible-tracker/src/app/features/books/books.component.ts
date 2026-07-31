@@ -10,6 +10,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { RouterLink } from '@angular/router';
 import { BibleBook } from '../../models/bible.models';
 import { BibleDataService } from '../../core/services/bible-data.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { StorageService } from '../../core/services/storage.service';
 
 type BookFilter = 'all' | 'old' | 'new' | 'completed' | 'progress' | 'not-started';
@@ -29,7 +30,7 @@ export class BooksComponent {
   readonly filteredBooks = computed(() => {
     const term = this.searchTerm().toLowerCase();
     return this.books.filter((book) => {
-      const matchesText = book.name.toLowerCase().includes(term);
+      const matchesText = this.i18n.translateBookName(book).toLowerCase().includes(term);
       const matchesFilter = this.matchesFilter(book);
       return matchesText && matchesFilter;
     });
@@ -37,7 +38,8 @@ export class BooksComponent {
 
   constructor(
     readonly bibleDataService: BibleDataService,
-    readonly storageService: StorageService
+    readonly storageService: StorageService,
+    readonly i18n: I18nService
   ) {
     this.books = this.bibleDataService.books;
   }

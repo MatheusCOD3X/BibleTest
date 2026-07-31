@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { I18nService } from '../../core/services/i18n.service';
 import { StorageService } from '../../core/services/storage.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class BackupComponent {
 
   constructor(
     private readonly storageService: StorageService,
+    readonly i18n: I18nService,
     private readonly snackbar: MatSnackBar
   ) {
     this.backupData = this.storageService.export();
@@ -28,16 +30,18 @@ export class BackupComponent {
 
   exportBackup(): void {
     this.backupData = this.storageService.export();
-    this.snackbar.open('Backup exportado', 'Fechar', { duration: 1600 });
+    this.snackbar.open(this.i18n.t().backup.exported, this.i18n.t().common.close, { duration: 1600 });
   }
 
   importBackup(): void {
     try {
       this.storageService.import(this.backupData);
-      this.snackbar.open('Backup restaurado', 'Fechar', { duration: 1600 });
+      this.snackbar.open(this.i18n.t().backup.restored, this.i18n.t().common.close, { duration: 1600 });
       this.importError = '';
-    } catch (error) {
-      this.importError = error instanceof Error ? error.message : 'Erro ao restaurar backup';
+    } catch {
+      // Mostramos sempre uma mensagem genérica traduzida aqui (em vez do `error.message` bruto),
+      // assim o StorageService não precisa conhecer o I18nService nem os textos de cada idioma.
+      this.importError = this.i18n.t().backup.invalidBackup;
     }
   }
 }

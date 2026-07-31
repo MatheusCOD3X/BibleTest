@@ -1,23 +1,23 @@
 <section class="books-shell">
   <header class="page-header">
-    <h1>Livros</h1>
+    <h1>{{ i18n.t().books.title }}</h1>
   </header>
 
   <div class="action-row">
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Pesquisar livro</mat-label>
+      <mat-label>{{ i18n.t().books.searchLabel }}</mat-label>
       <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
-      <button mat-icon-button matSuffix aria-label="Buscar livro">
+      <button mat-icon-button matSuffix [attr.aria-label]="i18n.t().books.searchAria">
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
     <mat-chip-listbox class="filter-chips" [value]="filter()" (selectionChange)="onFilterChange($event)">
-      <mat-chip-option value="all">Todos</mat-chip-option>
-      <mat-chip-option value="old">Antigo Testamento</mat-chip-option>
-      <mat-chip-option value="new">Novo Testamento</mat-chip-option>
-      <mat-chip-option value="completed">Concluídos</mat-chip-option>
-      <mat-chip-option value="progress">Em andamento</mat-chip-option>
-      <mat-chip-option value="not-started">Não iniciados</mat-chip-option>
+      <mat-chip-option value="all">{{ i18n.t().books.filterAll }}</mat-chip-option>
+      <mat-chip-option value="old">{{ i18n.t().books.filterOld }}</mat-chip-option>
+      <mat-chip-option value="new">{{ i18n.t().books.filterNew }}</mat-chip-option>
+      <mat-chip-option value="completed">{{ i18n.t().books.filterCompleted }}</mat-chip-option>
+      <mat-chip-option value="progress">{{ i18n.t().books.filterInProgress }}</mat-chip-option>
+      <mat-chip-option value="not-started">{{ i18n.t().books.filterNotStarted }}</mat-chip-option>
     </mat-chip-listbox>
   </div>
 
@@ -27,8 +27,8 @@
         <mat-card-content>
           <div class="book-row">
             <div>
-              <div class="book-title">{{ book.name }}</div>
-              <div class="book-meta">{{ storageService.getBookProgress(book).completedChapters }}/{{ book.chapters }} capítulos</div>
+              <div class="book-title">{{ i18n.translateBookName(book) }}</div>
+              <div class="book-meta">{{ storageService.getBookProgress(book).completedChapters }}/{{ book.chapters }} {{ i18n.t().common.chapters }}</div>
             </div>
             <div class="book-percent">{{ storageService.getBookProgress(book).progressPercent }}%</div>
           </div>

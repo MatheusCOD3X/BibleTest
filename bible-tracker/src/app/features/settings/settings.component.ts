@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppSettings } from '../../models/bible.models';
+import { I18nService } from '../../core/services/i18n.service';
 import { StorageService } from '../../core/services/storage.service';
 
 @Component({
@@ -25,6 +26,7 @@ export class SettingsComponent {
 
   constructor(
     private readonly storageService: StorageService,
+    readonly i18n: I18nService,
     private readonly snackbar: MatSnackBar
   ) {
     this.settings = this.storageService.settingsSignal;
@@ -36,7 +38,7 @@ export class SettingsComponent {
 
   saveSettings(): void {
     this.storageService.save();
-    this.snackbar.open('Configurações salvas', 'Fechar', { duration: 1600 });
+    this.snackbar.open(this.i18n.t().settings.settingsSaved, this.i18n.t().common.close, { duration: 1600 });
   }
 
   resetApp(): void {
@@ -50,6 +52,6 @@ export class SettingsComponent {
     clearTimeout(this.resetConfirmTimeout);
     this.resetConfirm.set(false);
     this.storageService.resetProgress();
-    this.snackbar.open('App resetado', 'Fechar', { duration: 1600 });
+    this.snackbar.open(this.i18n.t().settings.appReset, this.i18n.t().common.close, { duration: 1600 });
   }
 }

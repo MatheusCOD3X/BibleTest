@@ -12,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { BibleDataService } from './core/services/bible-data.service';
+import { I18nService } from './core/services/i18n.service';
 import { StorageService } from './core/services/storage.service';
 import { QuickActionsSheetComponent } from './shared/quick-actions-sheet.component';
 import { APP_VERSION } from '../environments/version';
@@ -45,6 +46,7 @@ export class AppComponent {
     private readonly bottomSheet: MatBottomSheet,
     readonly bibleDataService: BibleDataService,
     readonly storageService: StorageService,
+    readonly i18n: I18nService,
     breakpointObserver: BreakpointObserver
   ) {
     // Observa a largura da tela e atualiza `isMobile` quando ela cruzar 760px.
@@ -88,5 +90,9 @@ export class AppComponent {
     body.style.setProperty('--app-font-size', `${settings.fontSize}px`);
 
     body.classList.toggle('no-animations', !settings.animations);
+
+    // Mantém o atributo `lang` do <html> sincronizado com o idioma escolhido, importante
+    // para acessibilidade (leitores de tela) e para o `Intl`/`toLocaleTimeString` do navegador.
+    document.documentElement.lang = settings.language;
   }
 }

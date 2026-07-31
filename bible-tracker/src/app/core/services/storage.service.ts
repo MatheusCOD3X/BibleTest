@@ -1,6 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AppSettings, BibleBook, BookProgress, ChapterProgress, ReadingHistoryEntry, ReadingStats } from '../../models/bible.models';
+import { toBcp47Locale } from '../i18n/locale.util';
 import { decodeBitmaskFromSettings, encodeSettingsToBitmask } from '../utils/settings-bitmask';
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -142,6 +143,7 @@ export class StorageService {
     const id = `${book.id}:${chapterNumber}`;
     const existing = this.progressSignal().get(id);
     const now = new Date();
+    const locale = toBcp47Locale(this.settingsSignal().language);
     const completed = !existing?.completed;
     const entry: ChapterProgress = {
       id,
@@ -149,7 +151,7 @@ export class StorageService {
       chapterNumber,
       completed,
       completedAt: completed ? now.toISOString() : null,
-      completedTime: completed ? now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : null,
+      completedTime: completed ? now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : null,
       notes
     };
 
@@ -167,7 +169,7 @@ export class StorageService {
         bookId: book.id,
         chapterNumber,
         completedAt: now.toISOString(),
-        completedTime: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        completedTime: now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }),
         notes
       };
       this.historySignal.set([historyEntry, ...historyWithoutChapter]);
@@ -249,7 +251,7 @@ export class StorageService {
   markBookComplete(book: BibleBook): void {
     const next = new Map(this.progressSignal());
     const now = new Date();
-    const completedTime = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const completedTime = now.toLocaleTimeString(toBcp47Locale(this.settingsSignal().language), { hour: '2-digit', minute: '2-digit' });
     const newEntries: ReadingHistoryEntry[] = [];
 
     for (let index = 1; index <= book.chapters; index++) {
@@ -312,7 +314,7 @@ export class StorageService {
   markAllComplete(books: BibleBook[]): void {
     const next = new Map(this.progressSignal());
     const now = new Date();
-    const completedTime = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const completedTime = now.toLocaleTimeString(toBcp47Locale(this.settingsSignal().language), { hour: '2-digit', minute: '2-digit' });
     const newEntriesByBook = new Map<string, ReadingHistoryEntry[]>();
 
     books.forEach((book) => {

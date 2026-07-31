@@ -5,6 +5,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { BibleDataService } from '../../core/services/bible-data.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { StorageService } from '../../core/services/storage.service';
 import { BibleBook, BookProgress, ReadingHistoryEntry, ReadingStats } from '../../models/bible.models';
 
@@ -23,7 +24,8 @@ export class StatisticsComponent {
 
   constructor(
     readonly bibleDataService: BibleDataService,
-    readonly storageService: StorageService
+    readonly storageService: StorageService,
+    readonly i18n: I18nService
   ) {
     this.stats = computed(() => this.storageService.getStats(this.bibleDataService.books));
     this.history = this.storageService.historySignal;
@@ -40,6 +42,7 @@ export class StatisticsComponent {
   }
 
   getBookName(bookId: string): string {
-    return this.bibleDataService.getBookById(bookId)?.name ?? 'Livro';
+    const book = this.bibleDataService.getBookById(bookId);
+    return book ? this.i18n.translateBookName(book) : this.i18n.t().common.unknownBook;
   }
 }

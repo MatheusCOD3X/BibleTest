@@ -31,7 +31,7 @@ export interface AppSettings {
   fontFamily: 'inter' | 'serif' | 'mono';
   fontSize: number;
   animations: boolean;
-  language: 'pt-BR' | 'en';
+  language: 'pt-BR' | 'en' | 'es';
 }
 
 export interface BibleBook {

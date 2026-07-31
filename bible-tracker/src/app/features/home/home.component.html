@@ -2,9 +2,9 @@
   <mat-card class="home-hero-card">
     <div class="hero-copy">
       <h1>{{ greeting() }}, {{ userName }}</h1>
-      <p>Continue sua jornada de leitura</p>
+      <p>{{ i18n.t().home.continueJourney }}</p>
       <button mat-raised-button color="primary" class="hero-cta" (click)="continueReading()">
-        Continuar Leitura
+        {{ i18n.t().home.continueReadingCta }}
       </button>
     </div>
     <div class="hero-cross" aria-hidden="true">✝</div>
@@ -12,34 +12,34 @@
 
   <div class="section-title">
     <mat-icon>menu_book</mat-icon>
-    <span>Leitura de Hoje</span>
+    <span>{{ i18n.t().home.todayReading }}</span>
   </div>
   <mat-card class="info-card" role="button" tabindex="0" (click)="continueReading()">
     <div class="info-icon"><mat-icon>book</mat-icon></div>
     <div class="info-content">
-      <div class="info-headline">{{ currentReading().book.name }} - Capítulo {{ currentReading().chapterNumber }}</div>
+      <div class="info-headline">{{ i18n.translateBookName(currentReading().book) }} - {{ i18n.t().common.chapter }} {{ currentReading().chapterNumber }}</div>
       <mat-progress-bar mode="determinate" [value]="currentReading().progressPercent"></mat-progress-bar>
-      <div class="info-caption">{{ currentReading().completedChapters }} de {{ currentReading().totalChapters }} capítulos lidos</div>
+      <div class="info-caption">{{ currentReading().completedChapters }} {{ i18n.t().common.of }} {{ currentReading().totalChapters }} {{ i18n.t().common.chaptersRead }}</div>
     </div>
     <mat-icon class="info-chevron">chevron_right</mat-icon>
   </mat-card>
 
   <div class="section-title">
     <mat-icon>local_fire_department</mat-icon>
-    <span>Sequência Atual</span>
+    <span>{{ i18n.t().home.currentStreak }}</span>
   </div>
   <mat-card class="info-card streak-card">
     <div class="info-icon"><mat-icon>local_fire_department</mat-icon></div>
     <div class="info-content">
-      <div class="streak-value">{{ streak() }} dias consecutivos</div>
-      <div class="info-caption">Continue assim! Voce esta indo muito bem.</div>
+      <div class="streak-value">{{ streak() }} {{ i18n.t().common.daysInARow }}</div>
+      <div class="info-caption">{{ i18n.t().home.keepGoing }}</div>
     </div>
     <mat-icon class="info-chevron">chevron_right</mat-icon>
   </mat-card>
 
   <div class="section-title">
     <mat-icon>auto_awesome</mat-icon>
-    <span>Sugestão do Dia</span>
+    <span>{{ i18n.t().home.dailySuggestion }}</span>
   </div>
   <mat-card class="verse-card">
     <div class="verse-icon">“</div>
@@ -47,7 +47,7 @@
       <p>{{ dailyVerse().text }}</p>
       <div class="verse-reference">{{ dailyVerse().reference }}</div>
     </div>
-    <button mat-icon-button aria-label="Favoritar versículo">
+    <button mat-icon-button [attr.aria-label]="i18n.t().home.favoriteVerseAria">
       <mat-icon>favorite_border</mat-icon>
     </button>
   </mat-card>
@@ -56,7 +56,7 @@
     <div class="quick-stat-item">
       <div class="quick-icon"><mat-icon>menu_book</mat-icon></div>
       <div>
-        <div class="quick-label">Capítulos Hoje</div>
+        <div class="quick-label">{{ i18n.t().home.chaptersToday }}</div>
         <div class="quick-value">{{ chaptersToday() }}</div>
       </div>
     </div>
@@ -64,7 +64,7 @@
     <div class="quick-stat-item">
       <div class="quick-icon"><mat-icon>schedule</mat-icon></div>
       <div>
-        <div class="quick-label">Tempo de Leitura</div>
+        <div class="quick-label">{{ i18n.t().home.readingTime }}</div>
         <div class="quick-value">{{ readingMinutesToday() }} min</div>
       </div>
     </div>

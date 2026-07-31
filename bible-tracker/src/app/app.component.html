@@ -4,9 +4,9 @@
       <div class="menu-header">
         <div>
           <h2>Bible Tracker</h2>
-          <p>Leitura diária com progresso.</p>
+          <p>{{ i18n.t().app.tagline }}</p>
         </div>
-        <button mat-icon-button *ngIf="isMobile()" (click)="drawer.close()" aria-label="Fechar menu" class="drawer-close-button">
+        <button mat-icon-button *ngIf="isMobile()" (click)="drawer.close()" [attr.aria-label]="i18n.t().app.closeMenuAria" class="drawer-close-button">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -16,40 +16,45 @@
       <mat-nav-list class="menu-list">
         <a mat-list-item class="menu-link" routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }" (click)="isMobile() && drawer.close()">
           <mat-icon aria-hidden="true" class="menu-icon">home</mat-icon>
-          <span>Home</span>
+          <span>{{ i18n.t().common.home }}</span>
         </a>
         <a mat-list-item class="menu-link books-link" routerLink="/books" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
           <mat-icon aria-hidden="true" class="menu-icon">menu_book</mat-icon>
-          <span>Livros</span>
+          <span>{{ i18n.t().common.books }}</span>
         </a>
         <a mat-list-item class="menu-link" routerLink="/statistics" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
           <mat-icon aria-hidden="true" class="menu-icon">insights</mat-icon>
-          <span>Estatísticas</span>
+          <span>{{ i18n.t().common.statistics }}</span>
         </a>
         <a mat-list-item class="menu-link" routerLink="/backup" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
           <mat-icon aria-hidden="true" class="menu-icon">cloud_upload</mat-icon>
-          <span>Backup</span>
+          <span>{{ i18n.t().common.backup }}</span>
         </a>
         <a mat-list-item class="menu-link" routerLink="/settings" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
           <mat-icon aria-hidden="true" class="menu-icon">settings</mat-icon>
-          <span>Configurações</span>
+          <span>{{ i18n.t().common.settings }}</span>
         </a>
       </mat-nav-list>
 
       <div class="menu-section">
-        <div class="menu-section-title">Histórico recente</div>
+        <div class="menu-section-title">{{ i18n.t().app.recentHistory }}</div>
         <div class="history-list">
           @for (entry of recentHistory(); track entry.id) {
             <div class="history-item">
               <mat-icon aria-hidden="true" class="history-icon">schedule</mat-icon>
               <div class="history-copy">
-                <div class="history-title">{{ bibleDataService.getBookById(entry.bookId)?.name }} {{ entry.chapterNumber }}</div>
+                <div class="history-title">
+                  @if (bibleDataService.getBookById(entry.bookId); as book) {
+                    {{ i18n.translateBookName(book) }}
+                  }
+                  {{ entry.chapterNumber }}
+                </div>
                 <div class="history-meta">{{ entry.completedTime }}</div>
               </div>
             </div>
           }
           @if (!recentHistory().length) {
-            <div class="history-empty">Nenhuma leitura registrada ainda.</div>
+            <div class="history-empty">{{ i18n.t().app.noHistoryYet }}</div>
           }
         </div>
       </div>
@@ -62,15 +67,15 @@
 
   <mat-sidenav-content>
     <mat-toolbar class="app-toolbar" color="primary">
-      <button mat-icon-button (click)="drawer.toggle()" aria-label="Abrir menu de navegação">
+      <button mat-icon-button (click)="drawer.toggle()" [attr.aria-label]="i18n.t().app.openMenuAria">
         <mat-icon>menu</mat-icon>
       </button>
       <span class="toolbar-title">Bible Tracker</span>
       <span class="spacer"></span>
-      <button mat-icon-button routerLink="/" aria-label="Ir para home">
+      <button mat-icon-button routerLink="/" [attr.aria-label]="i18n.t().app.goHomeAria">
         <mat-icon>home</mat-icon>
       </button>
-      <button mat-icon-button routerLink="/statistics" aria-label="Ir para estatisticas">
+      <button mat-icon-button routerLink="/statistics" [attr.aria-label]="i18n.t().app.goStatisticsAria">
         <mat-icon>insights</mat-icon>
       </button>
     </mat-toolbar>
@@ -79,7 +84,7 @@
       <router-outlet></router-outlet>
     </main>
 
-    <button mat-fab class="app-fab" color="accent" aria-label="Ações rápidas" (click)="openQuickActions()">
+    <button mat-fab class="app-fab" color="accent" [attr.aria-label]="i18n.t().app.quickActionsAria" (click)="openQuickActions()">
       <mat-icon>rocket_launch</mat-icon>
     </button>
   </mat-sidenav-content>

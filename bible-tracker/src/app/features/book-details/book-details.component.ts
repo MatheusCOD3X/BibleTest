@@ -11,6 +11,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { BibleDataService } from '../../core/services/bible-data.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { StorageService } from '../../core/services/storage.service';
 import { BibleBook, ChapterProgress } from '../../models/bible.models';
 
@@ -32,6 +33,7 @@ export class BookDetailsComponent {
     private readonly route: ActivatedRoute,
     readonly bibleDataService: BibleDataService,
     readonly storageService: StorageService,
+    readonly i18n: I18nService,
     private readonly snackbar: MatSnackBar
   ) {
     this.progressMap = this.storageService.progressSignal;
@@ -50,7 +52,7 @@ export class BookDetailsComponent {
 
   toggleChapter(book: BibleBook, chapterNumber: number): void {
     this.storageService.toggleChapter(book, chapterNumber);
-    this.snackbar.open('Progresso atualizado', 'Fechar', { duration: 1600 });
+    this.snackbar.open(this.i18n.t().bookDetails.progressUpdated, this.i18n.t().common.close, { duration: 1600 });
   }
 
   updateNotes(book: BibleBook, chapterNumber: number, notes: string): void {
@@ -59,11 +61,11 @@ export class BookDetailsComponent {
 
   markBookComplete(book: BibleBook): void {
     this.storageService.markBookComplete(book);
-    this.snackbar.open('Livro marcado como concluído', 'Fechar', { duration: 1600 });
+    this.snackbar.open(this.i18n.t().bookDetails.bookMarkedComplete, this.i18n.t().common.close, { duration: 1600 });
   }
 
   unmarkBookComplete(book: BibleBook): void {
     this.storageService.unmarkBookComplete(book);
-    this.snackbar.open('Progresso do livro removido', 'Fechar', { duration: 1600 });
+    this.snackbar.open(this.i18n.t().bookDetails.bookProgressRemoved, this.i18n.t().common.close, { duration: 1600 });
   }
 }

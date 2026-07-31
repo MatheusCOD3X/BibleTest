@@ -1,27 +1,27 @@
 <section class="settings-shell">
   <mat-card class="settings-card">
-    <mat-card-title>Configurações</mat-card-title>
+    <mat-card-title>{{ i18n.t().settings.title }}</mat-card-title>
     <mat-card-content>
       <div class="settings-row">
         <mat-form-field appearance="outline" class="field-block">
-          <mat-label>Tema</mat-label>
+          <mat-label>{{ i18n.t().settings.theme }}</mat-label>
           <mat-select [ngModel]="settings().theme" (ngModelChange)="updateSetting('theme', $event)">
-            <mat-option value="light">Claro</mat-option>
-            <mat-option value="dark">Escuro</mat-option>
+            <mat-option value="light">{{ i18n.t().settings.themeLight }}</mat-option>
+            <mat-option value="dark">{{ i18n.t().settings.themeDark }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="field-block">
-          <mat-label>Fonte</mat-label>
+          <mat-label>{{ i18n.t().settings.font }}</mat-label>
           <mat-select [ngModel]="settings().fontFamily" (ngModelChange)="updateSetting('fontFamily', $event)">
-            <mat-option value="inter">Inter</mat-option>
-            <mat-option value="serif">Serif</mat-option>
-            <mat-option value="mono">Mono</mat-option>
+            <mat-option value="inter">{{ i18n.t().settings.fontInter }}</mat-option>
+            <mat-option value="serif">{{ i18n.t().settings.fontSerif }}</mat-option>
+            <mat-option value="mono">{{ i18n.t().settings.fontMono }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="field-block">
-          <mat-label>Tamanho</mat-label>
+          <mat-label>{{ i18n.t().settings.size }}</mat-label>
           <mat-select [ngModel]="settings().fontSize" (ngModelChange)="updateSetting('fontSize', $event)">
             <mat-option [value]="14">14</mat-option>
             <mat-option [value]="16">16</mat-option>
@@ -29,14 +29,23 @@
             <mat-option [value]="20">20</mat-option>
           </mat-select>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field-block">
+          <mat-label>{{ i18n.t().settings.language }}</mat-label>
+          <mat-select [ngModel]="settings().language" (ngModelChange)="updateSetting('language', $event)">
+            <mat-option value="pt-BR">{{ i18n.t().settings.languagePtBr }}</mat-option>
+            <mat-option value="en">{{ i18n.t().settings.languageEn }}</mat-option>
+            <mat-option value="es">{{ i18n.t().settings.languageEs }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
 
-      <mat-slide-toggle class="animations-toggle" [ngModel]="settings().animations" (ngModelChange)="updateSetting('animations', $event)">Animações</mat-slide-toggle>
+      <mat-slide-toggle class="animations-toggle" [ngModel]="settings().animations" (ngModelChange)="updateSetting('animations', $event)">{{ i18n.t().settings.animations }}</mat-slide-toggle>
 
       <div class="action-row">
-        <button mat-raised-button color="primary" class="save-button" (click)="saveSettings()">Salvar</button>
+        <button mat-raised-button color="primary" class="save-button" (click)="saveSettings()">{{ i18n.t().settings.save }}</button>
         <button mat-stroked-button color="warn" class="reset-button" (click)="resetApp()">
-          {{ resetConfirm() ? 'Confirmar reset' : 'Resetar aplicativo' }}
+          {{ resetConfirm() ? i18n.t().settings.confirmReset : i18n.t().settings.resetApp }}
         </button>
       </div>
     </mat-card-content>

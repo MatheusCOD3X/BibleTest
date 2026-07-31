@@ -1,15 +1,15 @@
 <section class="backup-shell">
   <mat-card class="backup-card">
-    <mat-card-title>Backup e restauração</mat-card-title>
+    <mat-card-title>{{ i18n.t().backup.title }}</mat-card-title>
     <mat-card-content>
-      <p class="intro-copy">Exporte seu progresso em JSON e restaure quando necessário</p>
+      <p class="intro-copy">{{ i18n.t().backup.intro }}</p>
 
       <div class="action-row">
-        <button mat-stroked-button class="backup-action" (click)="exportBackup()">Exportar JSON</button>
-        <button mat-stroked-button class="backup-action" (click)="importBackup()">Importar JSON</button>
+        <button mat-stroked-button class="backup-action" (click)="exportBackup()">{{ i18n.t().backup.exportJson }}</button>
+        <button mat-stroked-button class="backup-action" (click)="importBackup()">{{ i18n.t().backup.importJson }}</button>
       </div>
 
-      <h3>Dados de backup</h3>
+      <h3>{{ i18n.t().backup.dataLabel }}</h3>
       <mat-form-field appearance="outline" class="backup-textarea">
         <textarea matInput rows="10" [value]="backupData" (input)="backupData = $any($event.target).value"></textarea>
       </mat-form-field>

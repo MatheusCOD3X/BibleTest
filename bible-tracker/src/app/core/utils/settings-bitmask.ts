@@ -12,21 +12,25 @@ import { AppSettings } from '../../models/bible.models';
  *  bits 1-2     -> fontFamily  (0 = inter, 1 = serif, 2 = mono)
  *  bits 3-10    -> fontSize    (valor bruto em px, 0-255)
  *  bit 11       -> animations  (0 = desligado, 1 = ligado)
- *  bit 12       -> language    (0 = pt-BR, 1 = en)
+ *  bits 12-13   -> language    (0 = pt-BR, 1 = en, 2 = es)
  */
 export const SettingsBit = {
   THEME_DARK: 1 << 0,
-  ANIMATIONS_ON: 1 << 11,
-  LANGUAGE_EN: 1 << 12
+  ANIMATIONS_ON: 1 << 11
 } as const;
 
 const FONT_FAMILY_SHIFT = 1;
 const FONT_FAMILY_BITS = 0b11;
 const FONT_SIZE_SHIFT = 3;
 const FONT_SIZE_BITS = 0xff;
+const LANGUAGE_SHIFT = 12;
+const LANGUAGE_BITS = 0b11;
 
 const FONT_FAMILY_TO_CODE: Record<AppSettings['fontFamily'], number> = { inter: 0, serif: 1, mono: 2 };
 const CODE_TO_FONT_FAMILY: readonly AppSettings['fontFamily'][] = ['inter', 'serif', 'mono'];
+
+const LANGUAGE_TO_CODE: Record<AppSettings['language'], number> = { 'pt-BR': 0, en: 1, es: 2 };
+const CODE_TO_LANGUAGE: readonly AppSettings['language'][] = ['pt-BR', 'en', 'es'];
 
 /** Empacota um objeto `AppSettings` em um único número inteiro (bitmask). */
 export function encodeSettingsToBitmask(settings: AppSettings): number {
@@ -37,13 +41,11 @@ export function encodeSettingsToBitmask(settings: AppSettings): number {
   if (settings.animations) {
     mask |= SettingsBit.ANIMATIONS_ON;
   }
-  if (settings.language === 'en') {
-    mask |= SettingsBit.LANGUAGE_EN;
-  }
-  // "<<" desloca os bits do valor até a posição reservada para ele (seu "endereço" dentro
+  // "<<" desloca os bits do valor para a posição reservada a ele (o "endereço" dentro
   // do número); "|=" liga esses bits no resultado sem apagar os bits já definidos acima.
   mask |= (FONT_FAMILY_TO_CODE[settings.fontFamily] ?? 0) << FONT_FAMILY_SHIFT;
   mask |= (settings.fontSize & FONT_SIZE_BITS) << FONT_SIZE_SHIFT;
+  mask |= (LANGUAGE_TO_CODE[settings.language] ?? 0) << LANGUAGE_SHIFT;
   return mask;
 }
 
@@ -53,12 +55,13 @@ export function decodeBitmaskFromSettings(mask: number, fallback: AppSettings): 
   // 0; "&" (AND) então "recorta" só os bits daquele campo, zerando o restante do número.
   const fontFamilyCode = (mask >> FONT_FAMILY_SHIFT) & FONT_FAMILY_BITS;
   const fontSize = (mask >> FONT_SIZE_SHIFT) & FONT_SIZE_BITS;
+  const languageCode = (mask >> LANGUAGE_SHIFT) & LANGUAGE_BITS;
   return {
     theme: (mask & SettingsBit.THEME_DARK) ? 'dark' : 'light',
     fontFamily: CODE_TO_FONT_FAMILY[fontFamilyCode] ?? fallback.fontFamily,
     fontSize: fontSize || fallback.fontSize,
     animations: (mask & SettingsBit.ANIMATIONS_ON) !== 0,
-    language: (mask & SettingsBit.LANGUAGE_EN) ? 'en' : 'pt-BR'
+    language: CODE_TO_LANGUAGE[languageCode] ?? fallback.language
   };
 }
 
