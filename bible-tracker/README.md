@@ -2,6 +2,74 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.1.
 
+## Guia rápido para novos desenvolvedores
+
+Este projeto é um PWA (Progressive Web App) em Angular, sem backend próprio: todo o progresso de leitura, histórico e configurações são salvos localmente no navegador (`localStorage`), através do `StorageService`. Não é preciso configurar banco de dados nem variáveis de ambiente para rodar o projeto localmente.
+
+### Pré-requisitos
+
+- **Node.js** (recomendado 20.x LTS ou 18.19+) e **npm** (instalado junto com o Node)
+- **Angular CLI** — não precisa instalar globalmente, pode usar `npx ng ...`; se preferir instalar globalmente: `npm install -g @angular/cli`
+- Um navegador Chrome/Edge instalado (usado pelo Karma para rodar os testes)
+
+### Passo a passo para rodar o projeto
+
+> ⚠️ O app Angular fica dentro da pasta `bible-tracker/`, não na raiz do repositório. Sempre rode os comandos abaixo de dentro dessa pasta.
+
+```bash
+# 1. Entre na pasta do app
+cd bible-tracker
+
+# 2. Instale as dependências
+npm install
+
+# 3. Suba o servidor de desenvolvimento
+npm start
+# (equivalente a "ng serve")
+```
+
+Depois disso, abra `http://localhost:4200/` no navegador. O app recarrega automaticamente a cada alteração salva.
+
+### Outros comandos úteis
+
+| Comando | O que faz |
+| --- | --- |
+| `npm start` | Sobe o servidor de dev em `http://localhost:4200` |
+| `npm run build` | Gera o build de produção em `dist/bible-tracker` |
+| `npm run watch` | Build contínuo em modo desenvolvimento (útil para depurar o bundle) |
+| `npm test` | Roda os testes unitários (Karma + Jasmine) |
+| `ng generate component nome-do-componente` | Gera um novo componente seguindo o padrão do projeto |
+| `npm run release:patch` / `release:minor` / `release:major` | Sobe a versão do `package.json` (usa `npm version`) e cria o commit/tag de release |
+
+### Estrutura do projeto (visão geral)
+
+```
+src/app/
+  core/services/     -> serviços singleton (dados da Bíblia, persistência/localStorage)
+  core/utils/         -> funções utilitárias puras (ex.: bitmask de configurações)
+  features/           -> uma pasta por tela (home, books, book-details, statistics, settings, backup)
+  models/             -> interfaces/tipos compartilhados (bible.models.ts)
+  shared/             -> componentes reutilizáveis entre features
+```
+
+- **`StorageService`** (`core/services/storage.service.ts`) é o coração da persistência: guarda progresso de leitura, histórico e configurações (`AppSettings`) no `localStorage`, em formato JSON. As configurações também são espelhadas em um **bitmask** compacto (`core/utils/settings-bitmask.ts`) — veja a seção abaixo.
+- **`BibleDataService`** apenas expõe a lista estática de livros/capítulos da Bíblia (dado local, sem chamada de rede).
+- Não há chamadas HTTP nem `HttpClient` configurado no projeto hoje — veja a seção "Integração com backend/BFF" mais abaixo.
+
+### Configurações: JSON + Bitmask
+
+Além do objeto `AppSettings` salvo como JSON, o `StorageService` mantém um `settingsMaskSignal` que representa as mesmas configurações como um único número (bitmask), útil para sincronizar de forma compacta com um backend/BFF no futuro. O JSON continua sendo a fonte de verdade; o bitmask é recalculado automaticamente sempre que as configurações mudam e é apenas usado como fallback caso o JSON de um backup esteja ausente/corrompido.
+
+Ver `src/app/core/utils/settings-bitmask.ts` para o layout de bits e as funções `encodeSettingsToBitmask` / `decodeBitmaskFromSettings`.
+
+### Integração com backend/BFF
+
+Atualmente o app **não** possui nenhuma chamada de API: não há `HttpClient` configurado em `app.config.ts`, nem arquivos `environment.ts`/`environment.development.ts`, nem serviços de API. Todo o estado vive no `localStorage` do navegador. Ao integrar um BFF, sugerimos:
+
+1. Adicionar `provideHttpClient()` em `src/app/app.config.ts`.
+2. Criar `src/environments/environment.ts` e `environment.development.ts` com a URL base do BFF, e configurar o `fileReplacements` correspondente em `angular.json`.
+3. Criar um serviço dedicado (ex.: `core/services/api.service.ts`) para centralizar as chamadas HTTP, mantendo o `StorageService` como camada de persistência local/offline-first.
+
 ## Development server
 
 To start a local development server, run:

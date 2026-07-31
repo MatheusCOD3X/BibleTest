@@ -1,6 +1,15 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AppSettings, BibleBook, BookProgress, ChapterProgress, ReadingHistoryEntry, ReadingStats } from '../../models/bible.models';
+import { decodeBitmaskFromSettings, encodeSettingsToBitmask } from '../utils/settings-bitmask';
+
+const DEFAULT_SETTINGS: AppSettings = {
+  theme: 'light',
+  fontFamily: 'inter',
+  fontSize: 16,
+  animations: true,
+  language: 'pt-BR'
+};
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
@@ -8,13 +17,9 @@ export class StorageService {
   private readonly minutesPerChapter = 4;
   private readonly progressSubject = new BehaviorSubject<Map<string, ChapterProgress>>(new Map());
   readonly progressSignal = signal<Map<string, ChapterProgress>>(new Map());
-  readonly settingsSignal = signal<AppSettings>({
-    theme: 'light',
-    fontFamily: 'inter',
-    fontSize: 16,
-    animations: true,
-    language: 'pt-BR'
-  });
+  readonly settingsSignal = signal<AppSettings>({ ...DEFAULT_SETTINGS });
+  /** Compact bit-field mirror of `settingsSignal`, kept for lightweight persistence/sync (e.g. a future BFF). */
+  readonly settingsMaskSignal = computed(() => encodeSettingsToBitmask(this.settingsSignal()));
   readonly historySignal = signal<ReadingHistoryEntry[]>([]);
   private saveDebounceHandle: ReturnType<typeof setTimeout> | undefined;
 
@@ -31,6 +36,8 @@ export class StorageService {
     const state = {
       progress: Array.from(this.progressSignal().entries()).map(([id, chapter]) => ({ ...chapter })),
       settings: this.settingsSignal(),
+      // Redundant compact copy of `settings`, in addition to the JSON above (see settings-bitmask.ts).
+      settingsMask: this.settingsMaskSignal(),
       history: this.historySignal()
     };
     localStorage.setItem(this.storageKey, JSON.stringify(state));
@@ -65,23 +72,41 @@ export class StorageService {
       const progressMap = new Map<string, ChapterProgress>((state.progress || []).map((entry: ChapterProgress) => [entry.id, entry]));
       this.progressSignal.set(progressMap);
       this.progressSubject.next(progressMap);
-      this.settingsSignal.set({
-        theme: state.settings?.theme || 'light',
-        fontFamily: state.settings?.fontFamily || 'inter',
-        fontSize: state.settings?.fontSize || 16,
-        animations: state.settings?.animations ?? true,
-        language: state.settings?.language || 'pt-BR'
-      });
+      this.settingsSignal.set(this.resolveSettings(state.settings, state.settingsMask));
       this.historySignal.set(state.history || []);
     } catch {
       this.bootstrapSeed();
     }
   }
 
+  /** Prefers the full settings JSON; falls back to decoding the bitmask when the JSON is missing (e.g. a partial/legacy payload). */
+  private resolveSettings(settingsJson: Partial<AppSettings> | undefined, settingsMask: number | undefined): AppSettings {
+    if (settingsJson && typeof settingsJson === 'object') {
+      return {
+        theme: settingsJson.theme || DEFAULT_SETTINGS.theme,
+        fontFamily: settingsJson.fontFamily || DEFAULT_SETTINGS.fontFamily,
+        fontSize: settingsJson.fontSize || DEFAULT_SETTINGS.fontSize,
+        animations: settingsJson.animations ?? DEFAULT_SETTINGS.animations,
+        language: settingsJson.language || DEFAULT_SETTINGS.language
+      };
+    }
+    if (typeof settingsMask === 'number') {
+      return decodeBitmaskFromSettings(settingsMask, DEFAULT_SETTINGS);
+    }
+    return { ...DEFAULT_SETTINGS };
+  }
+
+  /** Applies settings received as a compact bitmask (e.g. pushed down by a backend/BFF) and persists them. */
+  applySettingsBitmask(mask: number): void {
+    this.settingsSignal.set(decodeBitmaskFromSettings(mask, this.settingsSignal()));
+    this.save();
+  }
+
   export(): string {
     return JSON.stringify({
       progress: Array.from(this.progressSignal().entries()).map(([id, chapter]) => ({ ...chapter })),
       settings: this.settingsSignal(),
+      settingsMask: this.settingsMaskSignal(),
       history: this.historySignal()
     }, null, 2);
   }
@@ -95,7 +120,7 @@ export class StorageService {
       const progressMap = new Map<string, ChapterProgress>((parsed.progress || []).map((entry: ChapterProgress) => [entry.id, entry]));
       this.progressSignal.set(progressMap);
       this.progressSubject.next(progressMap);
-      this.settingsSignal.set(parsed.settings || this.settingsSignal());
+      this.settingsSignal.set(this.resolveSettings(parsed.settings, parsed.settingsMask));
       this.historySignal.set(parsed.history || []);
       this.save();
     } catch {
@@ -108,13 +133,7 @@ export class StorageService {
     this.progressSignal.set(new Map());
     this.progressSubject.next(new Map());
     this.historySignal.set([]);
-    this.settingsSignal.set({
-      theme: 'light',
-      fontFamily: 'inter',
-      fontSize: 16,
-      animations: true,
-      language: 'pt-BR'
-    });
+    this.settingsSignal.set({ ...DEFAULT_SETTINGS });
   }
 
   toggleChapter(book: BibleBook, chapterNumber: number, notes: string = ''): void {
