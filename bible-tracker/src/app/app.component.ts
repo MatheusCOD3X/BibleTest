@@ -1,4 +1,4 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BibleDataService } from './core/services/bible-data.service';
 import { I18nService } from './core/services/i18n.service';
 import { StorageService } from './core/services/storage.service';
@@ -19,6 +20,7 @@ import { APP_VERSION } from '../environments/version';
 
 @Component({
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     NgIf,
@@ -31,7 +33,8 @@ import { APP_VERSION } from '../environments/version';
     MatIconModule,
     MatListModule,
     MatCardModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatTooltipModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

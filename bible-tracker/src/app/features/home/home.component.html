@@ -29,7 +29,9 @@
     <span>{{ i18n.t().home.currentStreak }}</span>
   </div>
   <mat-card class="info-card streak-card">
-    <div class="info-icon"><mat-icon>local_fire_department</mat-icon></div>
+    <div class="info-icon" [matBadge]="streak()" matBadgeColor="accent" [matBadgeHidden]="streak() === 0" [matTooltip]="i18n.t().home.currentStreak">
+      <mat-icon>local_fire_department</mat-icon>
+    </div>
     <div class="info-content">
       <div class="streak-value">{{ streak() }} {{ i18n.t().common.daysInARow }}</div>
       <div class="info-caption">{{ i18n.t().home.keepGoing }}</div>
@@ -47,7 +49,7 @@
       <p>{{ dailyVerse().text }}</p>
       <div class="verse-reference">{{ dailyVerse().reference }}</div>
     </div>
-    <button mat-icon-button [attr.aria-label]="i18n.t().home.favoriteVerseAria">
+    <button mat-icon-button [attr.aria-label]="i18n.t().home.favoriteVerseAria" [matTooltip]="i18n.t().home.favoriteVerseAria">
       <mat-icon>favorite_border</mat-icon>
     </button>
   </mat-card>

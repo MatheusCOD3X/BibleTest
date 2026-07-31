@@ -1,9 +1,11 @@
-import { Component, computed, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { BibleDataService } from '../../core/services/bible-data.service';
 import { I18nService } from '../../core/services/i18n.service';
@@ -14,7 +16,8 @@ import { DailyVerse } from '../../core/i18n/translations';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressBarModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressBarModule, MatBadgeModule, MatTooltipModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

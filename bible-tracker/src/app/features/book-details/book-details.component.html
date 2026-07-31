@@ -1,8 +1,8 @@
 @if (book()) {
   <section class="book-details-shell">
     <div class="action-row">
-      <button mat-raised-button color="primary" (click)="markBookComplete(book()!)">{{ i18n.t().bookDetails.markComplete }}</button>
-      <button mat-stroked-button (click)="unmarkBookComplete(book()!)">{{ i18n.t().bookDetails.unmark }}</button>
+      <button mat-raised-button color="primary" [matTooltip]="i18n.t().bookDetails.markComplete" (click)="markBookComplete(book()!)">{{ i18n.t().bookDetails.markComplete }}</button>
+      <button mat-stroked-button [matTooltip]="i18n.t().bookDetails.unmark" (click)="unmarkBookComplete(book()!)">{{ i18n.t().bookDetails.unmark }}</button>
     </div>
 
     <mat-card class="detail-card">
@@ -14,33 +14,32 @@
       </mat-card-content>
     </mat-card>
 
-    <div>
-      @for (chapterNumber of chapters(); track chapterNumber) {
-        <mat-card class="detail-card chapter-card">
-          <mat-card-content>
-            <div class="chapter-row">
-              <div class="chapter-actions">
-                <mat-checkbox [checked]="getChapterProgress(book()!, chapterNumber)?.completed ?? false" (change)="toggleChapter(book()!, chapterNumber)">
-                  {{ i18n.t().common.chapter }} {{ chapterNumber }}
-                </mat-checkbox>
-                <div class="metric-label">
-                  @if (getChapterProgress(book()!, chapterNumber)?.completedAt) {
-                    {{ getChapterProgress(book()!, chapterNumber)?.completedTime }}
-                  } @else {
-                    {{ i18n.t().bookDetails.pending }}
-                  }
-                </div>
+    <cdk-virtual-scroll-viewport itemSize="194" class="chapters-viewport">
+      <mat-card class="detail-card chapter-card" *cdkVirtualFor="let chapterNumber of chapters(); trackBy: trackByChapter">
+        <mat-card-content>
+          <div class="chapter-row">
+            <div class="chapter-actions">
+              <mat-checkbox [checked]="getChapterProgress(book()!, chapterNumber)?.completed ?? false" (change)="toggleChapter(book()!, chapterNumber)">
+                {{ i18n.t().common.chapter }} {{ chapterNumber }}
+              </mat-checkbox>
+              <div class="metric-label">
+                @if (getChapterProgress(book()!, chapterNumber)?.completedAt) {
+                  {{ getChapterProgress(book()!, chapterNumber)?.completedTime }}
+                } @else {
+                  {{ i18n.t().bookDetails.pending }}
+                }
               </div>
-              <mat-form-field appearance="outline" class="chapter-notes">
-                <mat-label>{{ i18n.t().bookDetails.notes }}</mat-label>
-                <textarea matInput [ngModel]="getChapterProgress(book()!, chapterNumber)?.notes || ''" (ngModelChange)="updateNotes(book()!, chapterNumber, $event)"></textarea>
-              </mat-form-field>
             </div>
-          </mat-card-content>
-        </mat-card>
-      }
-    </div>
+            <mat-form-field appearance="outline" class="chapter-notes">
+              <mat-label>{{ i18n.t().bookDetails.notes }}</mat-label>
+              <textarea matInput [ngModel]="getChapterProgress(book()!, chapterNumber)?.notes || ''" (ngModelChange)="updateNotes(book()!, chapterNumber, $event)"></textarea>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </cdk-virtual-scroll-viewport>
   </section>
 } @else {
   <div class="empty-state">{{ i18n.t().bookDetails.bookNotFound }}</div>
 }
+

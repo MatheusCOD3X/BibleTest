@@ -81,6 +81,42 @@
   <mat-card class="detail-card">
     <mat-card-title>{{ i18n.t().statistics.progressByBook }}</mat-card-title>
     <mat-card-content>
+      <mat-tab-group class="charts-tab-group" animationDuration="150ms">
+        <mat-tab [label]="i18n.t().statistics.chartProgressTab">
+          <ng-template matTabContent>
+            <div class="chart-wrap chart-wrap-small">
+              @if (stats().completedChapters > 0) {
+                <canvas baseChart [type]="progressChartType" [data]="progressChartData()" [options]="progressChartOptions"></canvas>
+              } @else {
+                <p class="chart-empty">{{ i18n.t().statistics.chartNoData }}</p>
+              }
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab [label]="i18n.t().statistics.chartMonthlyTab">
+          <ng-template matTabContent>
+            <div class="chart-wrap">
+              @if (history().length) {
+                <canvas baseChart [type]="monthlyChartType" [data]="monthlyChartData()" [options]="monthlyChartOptions"></canvas>
+              } @else {
+                <p class="chart-empty">{{ i18n.t().statistics.chartNoData }}</p>
+              }
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab [label]="i18n.t().statistics.chartBookTab">
+          <ng-template matTabContent>
+            <div class="chart-wrap">
+              @if (stats().completedChapters > 0) {
+                <canvas baseChart [type]="byBookChartType" [data]="byBookChartData()" [options]="byBookChartOptions"></canvas>
+              } @else {
+                <p class="chart-empty">{{ i18n.t().statistics.chartNoData }}</p>
+              }
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+
       @for (item of topProgress(); track item.book.id) {
         <div class="book-progress-row">
           <div class="book-row-head">
@@ -90,6 +126,23 @@
           <mat-progress-bar mode="determinate" [value]="item.progress.progressPercent"></mat-progress-bar>
         </div>
       }
+
+      <mat-expansion-panel class="all-books-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ i18n.t().statistics.viewAllBooks }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="all-books-list">
+          @for (item of allProgressSorted(); track item.book.id) {
+            <div class="book-progress-row">
+              <div class="book-row-head">
+                <strong>{{ i18n.translateBookName(item.book) }}</strong>
+                <span>{{ item.progress.progressPercent }}%</span>
+              </div>
+              <mat-progress-bar mode="determinate" [value]="item.progress.progressPercent"></mat-progress-bar>
+            </div>
+          }
+        </div>
+      </mat-expansion-panel>
     </mat-card-content>
   </mat-card>
 

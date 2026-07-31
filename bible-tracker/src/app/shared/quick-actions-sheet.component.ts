@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +8,7 @@ import { I18nService } from '../core/services/i18n.service';
 @Component({
   selector: 'app-quick-actions-sheet',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatListModule, MatIconModule, RouterLink],
   template: `
     <mat-nav-list>
@@ -22,6 +23,10 @@ import { I18nService } from '../core/services/i18n.service';
       <a mat-list-item routerLink="/statistics" (click)="close()">
         <mat-icon>insights</mat-icon>
         <span>{{ i18n.t().common.statistics }}</span>
+      </a>
+      <a mat-list-item routerLink="/history" (click)="close()">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ i18n.t().common.history }}</span>
       </a>
       <a mat-list-item routerLink="/backup" (click)="close()">
         <mat-icon>backup</mat-icon>

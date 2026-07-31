@@ -26,6 +26,10 @@
           <mat-icon aria-hidden="true" class="menu-icon">insights</mat-icon>
           <span>{{ i18n.t().common.statistics }}</span>
         </a>
+        <a mat-list-item class="menu-link" routerLink="/history" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
+          <mat-icon aria-hidden="true" class="menu-icon">schedule</mat-icon>
+          <span>{{ i18n.t().common.history }}</span>
+        </a>
         <a mat-list-item class="menu-link" routerLink="/backup" routerLinkActive="active-link" (click)="isMobile() && drawer.close()">
           <mat-icon aria-hidden="true" class="menu-icon">cloud_upload</mat-icon>
           <span>{{ i18n.t().common.backup }}</span>
@@ -72,10 +76,10 @@
       </button>
       <span class="toolbar-title">Bible Tracker</span>
       <span class="spacer"></span>
-      <button mat-icon-button routerLink="/" [attr.aria-label]="i18n.t().app.goHomeAria">
+      <button mat-icon-button routerLink="/" [attr.aria-label]="i18n.t().app.goHomeAria" [matTooltip]="i18n.t().app.goHomeAria">
         <mat-icon>home</mat-icon>
       </button>
-      <button mat-icon-button routerLink="/statistics" [attr.aria-label]="i18n.t().app.goStatisticsAria">
+      <button mat-icon-button routerLink="/statistics" [attr.aria-label]="i18n.t().app.goStatisticsAria" [matTooltip]="i18n.t().app.goStatisticsAria">
         <mat-icon>insights</mat-icon>
       </button>
     </mat-toolbar>
@@ -84,7 +88,7 @@
       <router-outlet></router-outlet>
     </main>
 
-    <button mat-fab class="app-fab" color="accent" [attr.aria-label]="i18n.t().app.quickActionsAria" (click)="openQuickActions()">
+    <button mat-fab class="app-fab" color="accent" [attr.aria-label]="i18n.t().app.quickActionsAria" [matTooltip]="i18n.t().app.quickActionsAria" (click)="openQuickActions()">
       <mat-icon>rocket_launch</mat-icon>
     </button>
   </mat-sidenav-content>

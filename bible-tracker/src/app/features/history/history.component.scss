@@ -1,0 +1,84 @@
+.history-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(2.7rem, 3vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.page-header p {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.search-field {
+  flex: 1 1 260px;
+}
+
+.sort-button {
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-chips {
+  width: 100%;
+}
+
+.history-viewport {
+  height: 560px;
+  width: 100%;
+}
+
+.history-entry-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border-radius: var(--radius-ui);
+  background: var(--color-surface);
+  box-shadow: 0 16px 36px rgba(16, 32, 58, 0.06);
+}
+
+.entry-icon {
+  color: var(--color-accent);
+}
+
+.entry-title {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.entry-meta {
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  margin-top: 4px;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--color-muted);
+  padding: 48px 0;
+}
+
+@media (max-width: 760px) {
+  .history-viewport {
+    height: 420px;
+  }
+}

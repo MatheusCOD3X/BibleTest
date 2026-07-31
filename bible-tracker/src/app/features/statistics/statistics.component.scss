@@ -181,6 +181,38 @@
   margin-bottom: 0;
 }
 
+.charts-tab-group {
+  margin-bottom: 20px;
+}
+
+.chart-wrap {
+  position: relative;
+  height: 280px;
+  padding: 20px 4px 4px;
+}
+
+.chart-wrap-small {
+  height: 240px;
+}
+
+.chart-empty {
+  text-align: center;
+  color: var(--color-muted);
+  padding: 40px 0;
+}
+
+.all-books-panel {
+  margin-top: 18px;
+  box-shadow: none !important;
+  border: 1px solid #e7edf5;
+}
+
+.all-books-list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-top: 12px;
+}
+
 @media (max-width: 860px) {
   .overview-grid,
   .stats-grid {

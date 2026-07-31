@@ -1,6 +1,7 @@
-import { Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -8,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { BibleDataService } from '../../core/services/bible-data.service';
@@ -18,7 +20,21 @@ import { BibleBook, ChapterProgress } from '../../models/bible.models';
 @Component({
   selector: 'app-book-details',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressBarModule, MatSnackBarModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ScrollingModule,
+    MatCardModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    FormsModule
+  ],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.scss'
 })
@@ -68,4 +84,9 @@ export class BookDetailsComponent {
     this.storageService.unmarkBookComplete(book);
     this.snackbar.open(this.i18n.t().bookDetails.bookProgressRemoved, this.i18n.t().common.close, { duration: 1600 });
   }
+
+  trackByChapter(_index: number, chapterNumber: number): number {
+    return chapterNumber;
+  }
 }
+

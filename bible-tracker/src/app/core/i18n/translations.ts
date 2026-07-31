@@ -17,6 +17,7 @@ export interface Translations {
     home: string;
     books: string;
     statistics: string;
+    history: string;
     backup: string;
     settings: string;
     save: string;
@@ -95,6 +96,22 @@ export interface Translations {
     progressByBook: string;
     recentReadings: string;
     noReadingsYet: string;
+    chartProgressTab: string;
+    chartMonthlyTab: string;
+    chartBookTab: string;
+    chartNoData: string;
+    viewAllBooks: string;
+  };
+  history: {
+    title: string;
+    subtitle: string;
+    searchLabel: string;
+    searchAria: string;
+    sortAria: string;
+    sortRecent: string;
+    sortOldest: string;
+    sortBook: string;
+    emptyState: string;
   };
   settings: {
     title: string;
@@ -134,6 +151,7 @@ const PT_BR: Translations = {
     home: 'Home',
     books: 'Livros',
     statistics: 'Estatísticas',
+    history: 'Histórico',
     backup: 'Backup',
     settings: 'Configurações',
     save: 'Salvar',
@@ -217,7 +235,23 @@ const PT_BR: Translations = {
     chaptersRemaining: 'Capítulos Restantes',
     progressByBook: 'Progresso por livro',
     recentReadings: 'Últimas leituras',
-    noReadingsYet: 'Nenhuma leitura registrada ainda.'
+    noReadingsYet: 'Nenhuma leitura registrada ainda.',
+    chartProgressTab: 'Progresso',
+    chartMonthlyTab: 'Por mês',
+    chartBookTab: 'Por livro',
+    chartNoData: 'Ainda não há dados suficientes para exibir o gráfico.',
+    viewAllBooks: 'Ver todos os 66 livros'
+  },
+  history: {
+    title: 'Histórico',
+    subtitle: 'Todas as suas leituras registradas, com busca, ordenação e filtros.',
+    searchLabel: 'Pesquisar por livro',
+    searchAria: 'Buscar por livro',
+    sortAria: 'Ordenar histórico',
+    sortRecent: 'Mais recentes',
+    sortOldest: 'Mais antigas',
+    sortBook: 'Livro (A-Z)',
+    emptyState: 'Nenhum registro encontrado.'
   },
   settings: {
     title: 'Configurações',
@@ -257,6 +291,7 @@ const EN: Translations = {
     home: 'Home',
     books: 'Books',
     statistics: 'Statistics',
+    history: 'History',
     backup: 'Backup',
     settings: 'Settings',
     save: 'Save',
@@ -340,7 +375,23 @@ const EN: Translations = {
     chaptersRemaining: 'Chapters Remaining',
     progressByBook: 'Progress by book',
     recentReadings: 'Recent readings',
-    noReadingsYet: 'No reading recorded yet.'
+    noReadingsYet: 'No reading recorded yet.',
+    chartProgressTab: 'Progress',
+    chartMonthlyTab: 'By month',
+    chartBookTab: 'By book',
+    chartNoData: 'Not enough data yet to show the chart.',
+    viewAllBooks: 'View all 66 books'
+  },
+  history: {
+    title: 'History',
+    subtitle: 'All your recorded readings, with search, sorting and filters.',
+    searchLabel: 'Search by book',
+    searchAria: 'Search by book',
+    sortAria: 'Sort history',
+    sortRecent: 'Most recent',
+    sortOldest: 'Oldest',
+    sortBook: 'Book (A-Z)',
+    emptyState: 'No records found.'
   },
   settings: {
     title: 'Settings',
@@ -380,6 +431,7 @@ const ES: Translations = {
     home: 'Inicio',
     books: 'Libros',
     statistics: 'Estadísticas',
+    history: 'Historial',
     backup: 'Copia de seguridad',
     settings: 'Configuración',
     save: 'Guardar',
@@ -463,7 +515,23 @@ const ES: Translations = {
     chaptersRemaining: 'Capítulos Restantes',
     progressByBook: 'Progreso por libro',
     recentReadings: 'Últimas lecturas',
-    noReadingsYet: 'Aún no hay lecturas registradas.'
+    noReadingsYet: 'Aún no hay lecturas registradas.',
+    chartProgressTab: 'Progreso',
+    chartMonthlyTab: 'Por mes',
+    chartBookTab: 'Por libro',
+    chartNoData: 'Aún no hay suficientes datos para mostrar el gráfico.',
+    viewAllBooks: 'Ver los 66 libros'
+  },
+  history: {
+    title: 'Historial',
+    subtitle: 'Todas tus lecturas registradas, con búsqueda, orden y filtros.',
+    searchLabel: 'Buscar por libro',
+    searchAria: 'Buscar por libro',
+    sortAria: 'Ordenar historial',
+    sortRecent: 'Más recientes',
+    sortOldest: 'Más antiguas',
+    sortBook: 'Libro (A-Z)',
+    emptyState: 'No se encontraron registros.'
   },
   settings: {
     title: 'Configuración',

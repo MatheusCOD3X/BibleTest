@@ -6,11 +6,18 @@
   <div class="action-row">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>{{ i18n.t().books.searchLabel }}</mat-label>
-      <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
-      <button mat-icon-button matSuffix [attr.aria-label]="i18n.t().books.searchAria">
+      <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" [matAutocomplete]="bookSuggestions" />
+      <button mat-icon-button matSuffix [attr.aria-label]="i18n.t().books.searchAria" [matTooltip]="i18n.t().books.searchAria">
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
+    <mat-autocomplete #bookSuggestions="matAutocomplete">
+      @for (book of searchSuggestions(); track book.id) {
+        <mat-option [value]="i18n.translateBookName(book)" (onSelectionChange)="goToBook(book.id)">
+          {{ i18n.translateBookName(book) }}
+        </mat-option>
+      }
+    </mat-autocomplete>
     <mat-chip-listbox class="filter-chips" [value]="filter()" (selectionChange)="onFilterChange($event)">
       <mat-chip-option value="all">{{ i18n.t().books.filterAll }}</mat-chip-option>
       <mat-chip-option value="old">{{ i18n.t().books.filterOld }}</mat-chip-option>
@@ -21,22 +28,21 @@
     </mat-chip-listbox>
   </div>
 
-  <div class="books-list">
-    @for (book of filteredBooks(); track book.id) {
-      <mat-card class="book-card" role="button" tabindex="0" [routerLink]="['/book', book.id]">
-        <mat-card-content>
-          <div class="book-row">
-            <div>
-              <div class="book-title">{{ i18n.translateBookName(book) }}</div>
-              <div class="book-meta">{{ storageService.getBookProgress(book).completedChapters }}/{{ book.chapters }} {{ i18n.t().common.chapters }}</div>
-            </div>
-            <div class="book-percent">{{ storageService.getBookProgress(book).progressPercent }}%</div>
+  <cdk-virtual-scroll-viewport itemSize="186" class="books-viewport">
+    <mat-card class="book-card" *cdkVirtualFor="let book of filteredBooks(); trackBy: trackByBook" role="button" tabindex="0" [routerLink]="['/book', book.id]">
+      <mat-card-content>
+        <div class="book-row">
+          <div>
+            <div class="book-title">{{ i18n.translateBookName(book) }}</div>
+            <div class="book-meta">{{ storageService.getBookProgress(book).completedChapters }}/{{ book.chapters }} {{ i18n.t().common.chapters }}</div>
           </div>
-          <div class="book-progress">
-            <mat-progress-bar mode="determinate" [value]="storageService.getBookProgress(book).progressPercent"></mat-progress-bar>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
+          <div class="book-percent">{{ storageService.getBookProgress(book).progressPercent }}%</div>
+        </div>
+        <div class="book-progress">
+          <mat-progress-bar mode="determinate" [value]="storageService.getBookProgress(book).progressPercent"></mat-progress-bar>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </cdk-virtual-scroll-viewport>
 </section>
+

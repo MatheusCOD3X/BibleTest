@@ -1,0 +1,51 @@
+<section class="history-shell">
+  <header class="page-header">
+    <h1>{{ i18n.t().history.title }}</h1>
+    <p>{{ i18n.t().history.subtitle }}</p>
+  </header>
+
+  <div class="action-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>{{ i18n.t().history.searchLabel }}</mat-label>
+      <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+      <button mat-icon-button matSuffix [attr.aria-label]="i18n.t().history.searchAria">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      class="sort-button"
+      [matMenuTriggerFor]="sortMenu"
+      [attr.aria-label]="i18n.t().history.sortAria"
+      [matTooltip]="i18n.t().history.sortAria">
+      <mat-icon>sort</mat-icon>
+      {{ sortLabel() }}
+    </button>
+    <mat-menu #sortMenu="matMenu">
+      <button mat-menu-item (click)="setSort('recent')">{{ i18n.t().history.sortRecent }}</button>
+      <button mat-menu-item (click)="setSort('oldest')">{{ i18n.t().history.sortOldest }}</button>
+      <button mat-menu-item (click)="setSort('book')">{{ i18n.t().history.sortBook }}</button>
+    </mat-menu>
+  </div>
+
+  <mat-chip-listbox class="filter-chips" [value]="filter()" (selectionChange)="onFilterChange($event)">
+    <mat-chip-option value="all">{{ i18n.t().books.filterAll }}</mat-chip-option>
+    <mat-chip-option value="old">{{ i18n.t().books.filterOld }}</mat-chip-option>
+    <mat-chip-option value="new">{{ i18n.t().books.filterNew }}</mat-chip-option>
+  </mat-chip-listbox>
+
+  @if (entries().length) {
+    <cdk-virtual-scroll-viewport itemSize="76" class="history-viewport">
+      <mat-card class="history-entry-card" *cdkVirtualFor="let entry of entries(); trackBy: trackByEntry">
+        <mat-icon aria-hidden="true" class="entry-icon">schedule</mat-icon>
+        <div class="entry-copy">
+          <div class="entry-title">{{ getBookName(entry.bookId) }} {{ entry.chapterNumber }}</div>
+          <div class="entry-meta">{{ entry.completedAt | date: 'dd/MM/yyyy' }} • {{ entry.completedTime }}</div>
+        </div>
+      </mat-card>
+    </cdk-virtual-scroll-viewport>
+  } @else {
+    <div class="empty-state">{{ i18n.t().history.emptyState }}</div>
+  }
+</section>
