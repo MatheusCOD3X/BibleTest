@@ -18,7 +18,7 @@ export class StorageService {
   private readonly progressSubject = new BehaviorSubject<Map<string, ChapterProgress>>(new Map());
   readonly progressSignal = signal<Map<string, ChapterProgress>>(new Map());
   readonly settingsSignal = signal<AppSettings>({ ...DEFAULT_SETTINGS });
-  /** Compact bit-field mirror of `settingsSignal`, kept for lightweight persistence/sync (e.g. a future BFF). */
+  /** Espelho compacto (bitmask) de `settingsSignal`, mantido para persistência/sincronização leve (ex.: com um futuro BFF). */
   readonly settingsMaskSignal = computed(() => encodeSettingsToBitmask(this.settingsSignal()));
   readonly historySignal = signal<ReadingHistoryEntry[]>([]);
   private saveDebounceHandle: ReturnType<typeof setTimeout> | undefined;
@@ -36,14 +36,14 @@ export class StorageService {
     const state = {
       progress: Array.from(this.progressSignal().entries()).map(([id, chapter]) => ({ ...chapter })),
       settings: this.settingsSignal(),
-      // Redundant compact copy of `settings`, in addition to the JSON above (see settings-bitmask.ts).
+      // Cópia compacta de `settings`, guardada além do JSON acima (ver settings-bitmask.ts).
       settingsMask: this.settingsMaskSignal(),
       history: this.historySignal()
     };
     localStorage.setItem(this.storageKey, JSON.stringify(state));
   }
 
-  /** Persists shortly after the last call, avoiding a write on every keystroke (e.g. notes). */
+  /** Salva um pouco depois da última chamada, evitando gravar a cada tecla digitada (ex.: nas notas). */
   private scheduleSave(delay = 400): void {
     clearTimeout(this.saveDebounceHandle);
     this.saveDebounceHandle = setTimeout(() => this.save(), delay);
@@ -79,7 +79,7 @@ export class StorageService {
     }
   }
 
-  /** Prefers the full settings JSON; falls back to decoding the bitmask when the JSON is missing (e.g. a partial/legacy payload). */
+  /** Dá preferência ao JSON completo de configurações; se ele estiver ausente (ex.: um backup antigo/incompleto), decodifica o bitmask como alternativa. */
   private resolveSettings(settingsJson: Partial<AppSettings> | undefined, settingsMask: number | undefined): AppSettings {
     if (settingsJson && typeof settingsJson === 'object') {
       return {
@@ -96,7 +96,7 @@ export class StorageService {
     return { ...DEFAULT_SETTINGS };
   }
 
-  /** Applies settings received as a compact bitmask (e.g. pushed down by a backend/BFF) and persists them. */
+  /** Aplica configurações recebidas como um bitmask compacto (ex.: enviado por um backend/BFF) e as salva. */
   applySettingsBitmask(mask: number): void {
     this.settingsSignal.set(decodeBitmaskFromSettings(mask, this.settingsSignal()));
     this.save();
@@ -137,6 +137,8 @@ export class StorageService {
   }
 
   toggleChapter(book: BibleBook, chapterNumber: number, notes: string = ''): void {
+    // Combinamos livro + capítulo em uma única string (ex.: "gen:3") para usar como chave no
+    // Map de progresso. Esse mesmo padrão de chave composta se repete no resto deste arquivo.
     const id = `${book.id}:${chapterNumber}`;
     const existing = this.progressSignal().get(id);
     const now = new Date();
@@ -156,8 +158,8 @@ export class StorageService {
     this.progressSignal.set(next);
     this.progressSubject.next(next);
 
-    // Drop any previous history entries for this chapter first so re-toggling never
-    // creates duplicates or leaves stale entries behind when a chapter is unchecked.
+    // Primeiro removemos qualquer entrada de histórico antiga deste capítulo, assim marcar/desmarcar
+    // repetidamente nunca cria duplicatas nem deixa registros "presos" quando o capítulo é desmarcado.
     const historyWithoutChapter = this.historySignal().filter((historyEntry) => !(historyEntry.bookId === book.id && historyEntry.chapterNumber === chapterNumber));
     if (completed) {
       const historyEntry: ReadingHistoryEntry = {
@@ -278,6 +280,8 @@ export class StorageService {
     this.progressSubject.next(next);
 
     if (newEntries.length) {
+      // Um Set serve aqui só para perguntar "esse capítulo está na lista?" rapidamente com
+      // `.has()` dentro do filter, em vez de percorrer o array `newEntries` a cada item.
       const newChapters = new Set(newEntries.map((entry) => entry.chapterNumber));
       const historyWithoutNewChapters = this.historySignal().filter((entry) => !(entry.bookId === book.id && newChapters.has(entry.chapterNumber)));
       this.historySignal.set([...newEntries.reverse(), ...historyWithoutNewChapters]);
@@ -366,6 +370,9 @@ export class StorageService {
     this.save();
   }
 
+  // Sequência (streak) = quantos dias seguidos (incluindo hoje/ontem) o usuário concluiu
+  // ao menos um capítulo. Estratégia: pegar as datas únicas do histórico, ordenar e contar
+  // quantos dias consecutivos existem a partir do dia mais recente.
   private calculateStreak(): number {
     const dates = Array.from(new Set(this.historySignal().map((entry) => entry.completedAt.split('T')[0]))).sort();
     if (!dates.length) {
@@ -378,7 +385,7 @@ export class StorageService {
     const lastActiveDay = new Date(dates[dates.length - 1]);
     const daysSinceLastActivity = Math.round((today.getTime() - lastActiveDay.getTime()) / oneDayMs);
 
-    // If the last completed chapter wasn't today or yesterday, the streak is broken.
+    // Se o último capítulo concluído não foi hoje nem ontem, a sequência (streak) foi quebrada.
     if (daysSinceLastActivity > 1) {
       return 0;
     }

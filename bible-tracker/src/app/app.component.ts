@@ -47,6 +47,9 @@ export class AppComponent {
     readonly storageService: StorageService,
     breakpointObserver: BreakpointObserver
   ) {
+    // Observa a largura da tela e atualiza `isMobile` quando ela cruzar 760px.
+    // distinctUntilChanged ignora emissões repetidas e takeUntilDestroyed cancela a inscrição
+    // sozinho quando o componente é destruído, evitando vazamento de memória.
     breakpointObserver
       .observe('(max-width: 760px)')
       .pipe(
@@ -56,6 +59,8 @@ export class AppComponent {
       )
       .subscribe((matches) => this.isMobile.set(matches));
 
+    // `effect` roda de novo automaticamente sempre que um signal lido dentro dele muda
+    // (aqui, toda vez que `settingsSignal` é atualizado, veja applySettingsToDocument()).
     effect(() => this.applySettingsToDocument());
   }
 
@@ -65,6 +70,8 @@ export class AppComponent {
     });
   }
 
+  // Aplica as configurações direto no <body> via classes/CSS custom properties, assim o
+  // tema/fonte/tamanho valem para o app inteiro sem repetir essa lógica em cada componente.
   private applySettingsToDocument(): void {
     if (typeof document === 'undefined') {
       return;

@@ -60,6 +60,8 @@ export class BooksComponent {
     }
   }
 
+  // O evento emitido pelo componente de filtro do Material não vem tipado com precisão,
+  // por isso usamos `any` aqui e convertemos manualmente o valor para `BookFilter`.
   onFilterChange(event: any): void {
     this.filter.set(event.value as BookFilter);
   }

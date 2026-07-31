@@ -49,6 +49,10 @@ body.no-animations * {
 
 html {
   scroll-behavior: smooth;
+  // A maioria dos componentes usa "rem", que sempre segue o font-size do <html> (raiz),
+  // e não o do <body>. Por isso a variável precisa estar aqui para o ajuste de tamanho
+  // da fonte nas Configurações realmente escalar o app inteiro.
+  font-size: var(--app-font-size, 16px);
 }
 
 html,

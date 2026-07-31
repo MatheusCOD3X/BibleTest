@@ -28,6 +28,9 @@ export class StatisticsComponent {
     this.stats = computed(() => this.storageService.getStats(this.bibleDataService.books));
     this.history = this.storageService.historySignal;
     this.progressByBook = computed(() => this.bibleDataService.books.map((book) => ({ book, progress: this.storageService.getBookProgress(book) })));
+    // `.slice()` sem argumentos copia o array antes de ordenar, porque `sort()` altera o array
+    // original - sem a cópia, isso bagunçaria também a ordem usada em `progressByBook`.
+    // Depois de ordenar do maior para o menor progresso, ficamos só com os 8 primeiros.
     this.topProgress = computed(() =>
       this.progressByBook()
         .slice()

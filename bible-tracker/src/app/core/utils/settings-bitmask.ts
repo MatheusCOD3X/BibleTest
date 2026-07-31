@@ -1,16 +1,17 @@
 import { AppSettings } from '../../models/bible.models';
 
 /**
- * Compact bit-field representation of `AppSettings`.
- * Stored alongside the existing JSON blob (not replacing it) so the settings
- * can also be read/written as a single integer - handy for lightweight sync
- * with a future backend/BFF, query-string sharing, or quick comparisons.
+ * Representa `AppSettings` de forma compacta, usando um bitmask (um número cujos bits
+ * individuais guardam cada configuração). Fica guardado junto com o JSON que já existe
+ * (não o substitui), permitindo também ler/escrever as configurações como um único
+ * inteiro - útil para sincronização leve com um futuro backend/BFF, compartilhamento
+ * via query string, ou comparações rápidas.
  *
- * Bit layout (LSB first):
+ * Layout dos bits (do menos significativo para o mais significativo):
  *  bit 0        -> theme       (0 = light, 1 = dark)
  *  bits 1-2     -> fontFamily  (0 = inter, 1 = serif, 2 = mono)
- *  bits 3-10    -> fontSize    (raw px value, 0-255)
- *  bit 11       -> animations  (0 = off, 1 = on)
+ *  bits 3-10    -> fontSize    (valor bruto em px, 0-255)
+ *  bit 11       -> animations  (0 = desligado, 1 = ligado)
  *  bit 12       -> language    (0 = pt-BR, 1 = en)
  */
 export const SettingsBit = {
@@ -27,7 +28,7 @@ const FONT_SIZE_BITS = 0xff;
 const FONT_FAMILY_TO_CODE: Record<AppSettings['fontFamily'], number> = { inter: 0, serif: 1, mono: 2 };
 const CODE_TO_FONT_FAMILY: readonly AppSettings['fontFamily'][] = ['inter', 'serif', 'mono'];
 
-/** Packs an `AppSettings` object into a single integer bitmask. */
+/** Empacota um objeto `AppSettings` em um único número inteiro (bitmask). */
 export function encodeSettingsToBitmask(settings: AppSettings): number {
   let mask = 0;
   if (settings.theme === 'dark') {
@@ -39,13 +40,17 @@ export function encodeSettingsToBitmask(settings: AppSettings): number {
   if (settings.language === 'en') {
     mask |= SettingsBit.LANGUAGE_EN;
   }
+  // "<<" desloca os bits do valor até a posição reservada para ele (seu "endereço" dentro
+  // do número); "|=" liga esses bits no resultado sem apagar os bits já definidos acima.
   mask |= (FONT_FAMILY_TO_CODE[settings.fontFamily] ?? 0) << FONT_FAMILY_SHIFT;
   mask |= (settings.fontSize & FONT_SIZE_BITS) << FONT_SIZE_SHIFT;
   return mask;
 }
 
-/** Unpacks a bitmask back into `AppSettings`, using `fallback` for any bits that decode to an unknown value. */
+/** Desempacota um bitmask de volta em `AppSettings`, usando `fallback` para qualquer bit que resulte em um valor desconhecido. */
 export function decodeBitmaskFromSettings(mask: number, fallback: AppSettings): AppSettings {
+  // ">>" desfaz o deslocamento feito na codificação, trazendo o valor de volta para a posição
+  // 0; "&" (AND) então "recorta" só os bits daquele campo, zerando o restante do número.
   const fontFamilyCode = (mask >> FONT_FAMILY_SHIFT) & FONT_FAMILY_BITS;
   const fontSize = (mask >> FONT_SIZE_SHIFT) & FONT_SIZE_BITS;
   return {
@@ -57,7 +62,7 @@ export function decodeBitmaskFromSettings(mask: number, fallback: AppSettings): 
   };
 }
 
-/** Checks whether every bit in `flag` is set in `mask`. */
+/** Verifica se todos os bits de `flag` estão presentes (ligados) em `mask`. */
 export function hasSettingsFlag(mask: number, flag: number): boolean {
   return (mask & flag) === flag;
 }

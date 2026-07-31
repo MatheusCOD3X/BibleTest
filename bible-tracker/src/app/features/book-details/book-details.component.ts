@@ -23,6 +23,8 @@ import { BibleBook, ChapterProgress } from '../../models/bible.models';
 })
 export class BookDetailsComponent {
   readonly book = signal<BibleBook | undefined>(undefined);
+  // Truque para gerar a lista [1, 2, 3, ..., N]: `Array.from({ length: N }, ...)` cria um
+  // array "vazio" de tamanho N e o callback converte cada posição (index) em index + 1.
   readonly chapters = computed(() => Array.from({ length: this.book()?.chapters ?? 0 }, (_, index) => index + 1));
   readonly progressMap: () => Map<string, ChapterProgress>;
 
@@ -33,6 +35,9 @@ export class BookDetailsComponent {
     private readonly snackbar: MatSnackBar
   ) {
     this.progressMap = this.storageService.progressSignal;
+    // Escuta mudanças no parâmetro de rota (:id). É necessário porque, ao navegar de um livro
+    // para outro (ex.: "/book/gen" -> "/book/exo"), o Angular reaproveita este mesmo componente
+    // em vez de recriá-lo, então precisamos reagir manualmente à mudança do id.
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id') ?? '';
       this.book.set(this.bibleDataService.getBookById(id));

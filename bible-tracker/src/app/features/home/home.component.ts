@@ -44,8 +44,8 @@ export class HomeComponent {
       const book = this.bibleDataService.getBookById(latest.bookId);
       if (book) {
         const progress = this.storageService.getBookProgress(book);
-        // If the book from the latest entry is now fully completed, move on to the
-        // next pending book instead of re-suggesting an already-finished chapter.
+        // Se o livro do registro mais recente já foi concluído por completo, avançamos
+        // para o próximo livro pendente, em vez de sugerir de novo um capítulo já finalizado.
         if (!progress.completed) {
           const nextChapter = Math.min(latest.chapterNumber + 1, book.chapters);
           return {
@@ -90,6 +90,9 @@ export class HomeComponent {
       { text: 'Alegrei-me com os que me disseram: Vamos a casa do Senhor.', reference: 'Salmos 122:1' }
     ];
 
+    // Conta quantos dias já se passaram desde 1º de janeiro ("dia do ano") e usa o resto da
+    // divisão (%) pelo tamanho da lista para sempre escolher o mesmo versículo no mesmo dia,
+    // voltando ao início da lista quando os dias passarem da quantidade de versículos.
     const start = new Date(new Date().getFullYear(), 0, 0);
     const diff = new Date().getTime() - start.getTime();
     const oneDay = 1000 * 60 * 60 * 24;

@@ -32,7 +32,7 @@ describe('settings-bitmask', () => {
   });
 
   it('falls back to the provided defaults for an unknown fontFamily code', () => {
-    const mask = 0b11 << 1; // fontFamily code 3 is not mapped to any value
+    const mask = 0b11 << 1; // código 3 de fontFamily não corresponde a nenhum valor mapeado
     const decoded = decodeBitmaskFromSettings(mask, DEFAULTS);
     expect(decoded.fontFamily).toBe(DEFAULTS.fontFamily);
   });
