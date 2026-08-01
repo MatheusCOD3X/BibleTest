@@ -218,14 +218,6 @@
   width: min(100%, 1260px);
 }
 
-.app-fab {
-  position: fixed;
-  right: 28px;
-  bottom: 28px;
-  z-index: 30;
-  box-shadow: 0 22px 46px rgba(16, 32, 58, 0.18);
-}
-
 @media (max-width: 1000px) {
   .menu-card {
     position: static;

@@ -10,12 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
-import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BibleDataService } from './core/services/bible-data.service';
 import { I18nService } from './core/services/i18n.service';
 import { StorageService } from './core/services/storage.service';
-import { QuickActionsSheetComponent } from './shared/quick-actions-sheet.component';
 import { APP_VERSION } from '../environments/version';
 
 @Component({
@@ -33,7 +31,6 @@ import { APP_VERSION } from '../environments/version';
     MatIconModule,
     MatListModule,
     MatCardModule,
-    MatBottomSheetModule,
     MatTooltipModule
   ],
   templateUrl: './app.component.html',
@@ -46,7 +43,6 @@ export class AppComponent {
   readonly recentHistory = computed(() => this.storageService.historySignal().slice(0, 3));
 
   constructor(
-    private readonly bottomSheet: MatBottomSheet,
     readonly bibleDataService: BibleDataService,
     readonly storageService: StorageService,
     readonly i18n: I18nService,
@@ -67,12 +63,6 @@ export class AppComponent {
     // `effect` roda de novo automaticamente sempre que um signal lido dentro dele muda
     // (aqui, toda vez que `settingsSignal` é atualizado, veja applySettingsToDocument()).
     effect(() => this.applySettingsToDocument());
-  }
-
-  openQuickActions(): void {
-    this.bottomSheet.open(QuickActionsSheetComponent, {
-      panelClass: 'quick-actions-sheet'
-    });
   }
 
   // Aplica as configurações direto no <body> via classes/CSS custom properties, assim o

@@ -1,3 +1,17 @@
+@use '@angular/material' as mat;
+
+// This app has no global Angular Material theme (every other component is hand-themed via the
+// --color-* custom properties above). mat-slide-toggle is the one exception: it's scoped here to
+// Angular Material's own ready-made theming mixin (official, supported API) instead of overriding
+// internal MDC classes/pseudo-elements by hand, so the track/handle/icons render with real
+// Material shapes and colors out of the box.
+$slide-toggle-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$cyan-palette
+  )
+));
+
 :root {
   --color-surface: #ffffff;
   --color-primary: #10203a;
@@ -53,6 +67,9 @@ html {
   // e não o do <body>. Por isso a variável precisa estar aqui para o ajuste de tamanho
   // da fonte nas Configurações realmente escalar o app inteiro.
   font-size: var(--app-font-size, 16px);
+
+  @include mat.core();
+  @include mat.slide-toggle-theme($slide-toggle-theme);
 }
 
 html,
@@ -268,46 +285,6 @@ select {
   background-color: transparent;
 }
 
-// mat-slide-toggle (Configurações > Animações) uses the same MDC token gap as above:
-// track/handle backgrounds default to transparent, leaving only the on/off icon visible.
-.mdc-switch {
-  .mdc-switch__track {
-    border-radius: 999px;
-
-    &::before {
-      background-color: var(--color-border);
-    }
-
-    &::after {
-      background-color: var(--color-accent);
-    }
-  }
-
-  .mdc-switch__handle-track,
-  .mdc-switch__handle {
-    &::before,
-    &::after {
-      background-color: #ffffff;
-    }
-  }
-
-  .mdc-switch__icon {
-    fill: currentColor;
-  }
-
-  &.mdc-switch--unselected .mdc-switch__icon--off {
-    color: var(--color-muted);
-  }
-
-  &.mdc-switch--selected .mdc-switch__icon--on {
-    color: var(--color-accent-strong);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-  }
-}
-
 button.mat-raised-button,
 button.mat-stroked-button,
 button.mat-flat-button {
@@ -386,8 +363,13 @@ button:disabled,
   opacity: 1;
 }
 
-// Autocomplete panel styling - opaque, strong contrast
-.mat-mdc-autocomplete-panel {
+// Dropdown/overlay panels (autocomplete, mat-select, mat-menu) - opaque, strong contrast.
+// All three render in the CDK overlay container, outside the component that opened them, and
+// default to a transparent background without a configured Material theme, so they blend into
+// whatever is behind them. Covered together here so every dropdown in the app stays consistent.
+.mat-mdc-autocomplete-panel,
+.mat-mdc-select-panel,
+.mat-mdc-menu-panel {
   background: var(--color-surface) !important;
   box-shadow: 0 16px 38px rgba(16, 32, 58, 0.12) !important;
   border-radius: var(--radius-ui);

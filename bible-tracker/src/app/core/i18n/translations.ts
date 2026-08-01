@@ -40,7 +40,6 @@ export interface Translations {
     closeMenuAria: string;
     goHomeAria: string;
     goStatisticsAria: string;
-    quickActionsAria: string;
   };
   home: {
     greetingMorning: string;
@@ -178,8 +177,7 @@ const PT_BR: Translations = {
     openMenuAria: 'Abrir menu de navegação',
     closeMenuAria: 'Fechar menu',
     goHomeAria: 'Ir para home',
-    goStatisticsAria: 'Ir para estatisticas',
-    quickActionsAria: 'Ações rápidas'
+    goStatisticsAria: 'Ir para estatisticas'
   },
   home: {
     greetingMorning: 'Bom dia',
@@ -323,8 +321,7 @@ const EN: Translations = {
     openMenuAria: 'Open navigation menu',
     closeMenuAria: 'Close menu',
     goHomeAria: 'Go to home',
-    goStatisticsAria: 'Go to statistics',
-    quickActionsAria: 'Quick actions'
+    goStatisticsAria: 'Go to statistics'
   },
   home: {
     greetingMorning: 'Good morning',
@@ -468,8 +465,7 @@ const ES: Translations = {
     openMenuAria: 'Abrir menú de navegación',
     closeMenuAria: 'Cerrar menú',
     goHomeAria: 'Ir a inicio',
-    goStatisticsAria: 'Ir a estadísticas',
-    quickActionsAria: 'Acciones rápidas'
+    goStatisticsAria: 'Ir a estadísticas'
   },
   home: {
     greetingMorning: 'Buenos días',
