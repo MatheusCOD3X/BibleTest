@@ -1,10 +1,26 @@
-# Bible Tracker
+# 📖 Bible Tracker Frontend PWA
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.1.
+**v0.6.0** | Progressive Web App (PWA) para rastreamento de leitura bíblica  
+Built with [Angular 19](https://angular.io) + [TypeScript](https://www.typescriptlang.org/) + [Angular Material 19](https://material.angular.io)
+
+![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-13%2F13%20Passing-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Frontend PWA](https://img.shields.io/badge/Type-Frontend%20PWA-blue?logo=angular&logoColor=white)
 
 ## Guia rápido para novos desenvolvedores
 
-Este projeto é um PWA (Progressive Web App) em Angular, sem backend próprio: todo o progresso de leitura, histórico e configurações são salvos localmente no navegador (`localStorage`), através do `StorageService`. Não é preciso configurar banco de dados nem variáveis de ambiente para rodar o projeto localmente.
+Este projeto é um **PWA (Progressive Web App) standalone**, 100% frontend, sem backend próprio incluído. Todo o progresso de leitura, histórico e configurações são salvos localmente no navegador (`localStorage`) via `StorageService`. Não é preciso configurar banco de dados, servidor, ou variáveis de ambiente para rodar o projeto localmente.
+
+### 📚 Documentação
+
+- **[BEGINNER_GUIDE.md](../BEGINNER_GUIDE.md)** ← 🟢 Comece aqui se é novo no projeto (explicação em alto nível)
+- **[ARCHITECTURE.md](../ARCHITECTURE.md)** — Documentação completa da estrutura, serviços, modelos de dados
+- **[ARCHITECTURE_DIAGRAM.md](../ARCHITECTURE_DIAGRAM.md)** — Diagrama visual (Mermaid) da arquitetura
+- **[PDF_EXPORT_GUIDE.md](../PDF_EXPORT_GUIDE.md)** — Como exportar o diagrama para PDF
+- **[NAMING_GUIDELINES.md](../NAMING_GUIDELINES.md)** — Guia de branding e nomenclatura ("Frontend PWA")
+- **[CHANGELOG.md](../CHANGELOG.md)** — Histórico de mudanças por versão
+
 
 ### Pré-requisitos
 
@@ -64,11 +80,28 @@ Ver `src/app/core/utils/settings-bitmask.ts` para o layout de bits e as funçõe
 
 ### Integração com backend/BFF
 
-Atualmente o app **não** possui nenhuma chamada de API: não há `HttpClient` configurado em `app.config.ts`, nem arquivos `environment.ts`/`environment.development.ts`, nem serviços de API. Todo o estado vive no `localStorage` do navegador. Ao integrar um BFF, sugerimos:
+Atualmente o app **não** possui nenhuma chamada de API: não há `HttpClient` configurado em `app.config.ts`, nem arquivos `environment.ts`/`environment.development.ts`, nem serviços de API. Todo o estado vive no `localStorage` do navegador.
+
+#### 🔮 Futuro: Múltiplas versões bíblicas
+
+Em desenvolvimento futuro (v1.0.0+), o projeto integrará com uma API de conteúdo bíblico para suportar múltiplas versões:
+- **Versões protestantes** (ACF, NVI, NVT, etc.)
+- **Versões católicas** (Ave Maria, Pastoral, etc.)
+- **Apócrifos e outras tradições**
+- **Múltiplos idiomas**
+
+**Recomendação arquitetural**: Criar `BibleContentService` separado em `core/services/` que abstrai a origem do conteúdo (API pública, JSON estático, ou BFF customizado). **Nenhuma limitação ou estrutura especial será imposta agora** — a arquitetura é flexível o suficiente para qualquer dessas abordagens.
+
+Para suporte a múltiplas versões com grande volume de dados, considerar:
+- Migrar de `localStorage` para `IndexedDB` (suporta gigabytes vs. 5MB do localStorage)
+- Adicionar `dataGroups` em `ngsw-config.json` para cache de conteúdo
+
+Ao integrar um BFF/API, sugerimos:
 
 1. Adicionar `provideHttpClient()` em `src/app/app.config.ts`.
-2. Criar `src/environments/environment.ts` e `environment.development.ts` com a URL base do BFF, e configurar o `fileReplacements` correspondente em `angular.json`.
-3. Criar um serviço dedicado (ex.: `core/services/api.service.ts`) para centralizar as chamadas HTTP, mantendo o `StorageService` como camada de persistência local/offline-first.
+2. Criar `src/environments/environment.ts` e `environment.development.ts` com a URL base da API.
+3. Criar `src/app/core/services/bible-content.service.ts` para centralizar as chamadas HTTP.
+4. Manter `StorageService` como camada de persistência local/offline-first.
 
 ## Development server
 

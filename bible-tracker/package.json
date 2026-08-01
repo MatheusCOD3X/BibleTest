@@ -1,6 +1,7 @@
 {
   "name": "bible-tracker",
-  "version": "0.5.1",
+  "version": "0.6.0",
+  "description": "Progressive Web App for Bible reading progress tracking - Frontend PWA (Angular 19, TypeScript)",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
