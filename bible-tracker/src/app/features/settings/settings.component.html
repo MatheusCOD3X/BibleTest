@@ -40,10 +40,21 @@
         </mat-form-field>
       </div>
 
-      <mat-slide-toggle class="animations-toggle" [ngModel]="settings().animations" (ngModelChange)="updateSetting('animations', $event)">{{ i18n.t().settings.animations }}</mat-slide-toggle>
+      <mat-list class="animations-list">
+        <mat-list-item class="animations-item">
+          <span matListItemTitle>{{ i18n.t().settings.animations }}</span>
+          <mat-slide-toggle matListItemMeta [ngModel]="settings().animations" (ngModelChange)="updateSetting('animations', $event)"></mat-slide-toggle>
+        </mat-list-item>
+      </mat-list>
 
       <div class="action-row">
-        <button mat-raised-button color="primary" class="save-button" (click)="saveSettings()">{{ i18n.t().settings.save }}</button>
+        <div class="button-row-primary">
+          <button mat-raised-button color="primary" class="save-button" (click)="saveSettings()">{{ i18n.t().settings.save }}</button>
+          <button mat-stroked-button class="cancel-button" [disabled]="!hasUnsavedChanges()" (click)="cancelSettings()">
+            <mat-icon>undo</mat-icon>
+            {{ i18n.t().common.cancel }}
+          </button>
+        </div>
         <button mat-stroked-button color="warn" class="reset-button" (click)="resetApp()">
           {{ resetConfirm() ? i18n.t().settings.confirmReset : i18n.t().settings.resetApp }}
         </button>

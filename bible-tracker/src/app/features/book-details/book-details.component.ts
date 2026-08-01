@@ -8,7 +8,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +29,6 @@ import { BibleBook, ChapterProgress } from '../../models/bible.models';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatProgressBarModule,
     MatTooltipModule,
     MatSnackBarModule,
     FormsModule

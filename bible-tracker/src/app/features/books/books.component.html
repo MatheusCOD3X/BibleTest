@@ -18,7 +18,7 @@
         </mat-option>
       }
     </mat-autocomplete>
-    <mat-chip-listbox class="filter-chips" [value]="filter()" (selectionChange)="onFilterChange($event)">
+    <mat-chip-listbox class="filter-chips" [value]="filter()" (change)="onFilterChange($event)">
       <mat-chip-option value="all">{{ i18n.t().books.filterAll }}</mat-chip-option>
       <mat-chip-option value="old">{{ i18n.t().books.filterOld }}</mat-chip-option>
       <mat-chip-option value="new">{{ i18n.t().books.filterNew }}</mat-chip-option>

@@ -1,32 +1,61 @@
 @if (book()) {
   <section class="book-details-shell">
     <div class="action-row">
-      <button mat-raised-button color="primary" [matTooltip]="i18n.t().bookDetails.markComplete" (click)="markBookComplete(book()!)">{{ i18n.t().bookDetails.markComplete }}</button>
+      <button mat-raised-button color="primary" class="mark-complete-btn" [matTooltip]="i18n.t().bookDetails.markComplete" (click)="markBookComplete(book()!)">{{ i18n.t().bookDetails.markComplete }}</button>
       <button mat-stroked-button [matTooltip]="i18n.t().bookDetails.unmark" (click)="unmarkBookComplete(book()!)">{{ i18n.t().bookDetails.unmark }}</button>
     </div>
 
-    <mat-card class="detail-card">
-      <mat-card-title>{{ i18n.translateBookName(book()!) }}</mat-card-title>
+    <mat-card class="detail-card progress-card">
       <mat-card-content>
-        <p>{{ book()!.chapters }} {{ i18n.t().common.chapters }} • {{ i18n.translateTestament(book()!.testament) }}</p>
-        <mat-progress-bar mode="determinate" [value]="storageService.getBookProgress(book()!).progressPercent"></mat-progress-bar>
-        <p class="metric-label">{{ storageService.getBookProgress(book()!).progressPercent }}% {{ i18n.t().bookDetails.percentComplete }}</p>
+        <div class="progress-hero">
+          <div class="progress-ring" [style.--progress]="storageService.getBookProgress(book()!).progressPercent">
+            <div class="progress-ring-inner">
+              <span class="progress-ring-percent">{{ storageService.getBookProgress(book()!).progressPercent }}%</span>
+            </div>
+          </div>
+          <div class="progress-hero-info">
+            <h2 class="progress-book-title">{{ i18n.translateBookName(book()!) }}</h2>
+            <span class="testament-badge">{{ i18n.translateTestament(book()!.testament) }}</span>
+            <div class="progress-stats-row">
+              <div class="progress-stat">
+                <strong>{{ storageService.getBookProgress(book()!).completedChapters }}</strong>
+                <span>{{ i18n.t().bookDetails.completedLabel }}</span>
+              </div>
+              <div class="progress-stat-divider" aria-hidden="true"></div>
+              <div class="progress-stat">
+                <strong>{{ book()!.chapters - storageService.getBookProgress(book()!).completedChapters }}</strong>
+                <span>{{ i18n.t().bookDetails.remainingLabel }}</span>
+              </div>
+              <div class="progress-stat-divider" aria-hidden="true"></div>
+              <div class="progress-stat">
+                <strong>{{ book()!.chapters }}</strong>
+                <span>{{ i18n.t().bookDetails.chaptersLabel }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
     <cdk-virtual-scroll-viewport itemSize="194" class="chapters-viewport">
-      <mat-card class="detail-card chapter-card" *cdkVirtualFor="let chapterNumber of chapters(); trackBy: trackByChapter">
+      <mat-card
+        class="detail-card chapter-card"
+        [class.chapter-card--completed]="getChapterProgress(book()!, chapterNumber)?.completed"
+        *cdkVirtualFor="let chapterNumber of chapters(); trackBy: trackByChapter"
+      >
         <mat-card-content>
           <div class="chapter-row">
             <div class="chapter-actions">
               <mat-checkbox [checked]="getChapterProgress(book()!, chapterNumber)?.completed ?? false" (change)="toggleChapter(book()!, chapterNumber)">
                 {{ i18n.t().common.chapter }} {{ chapterNumber }}
               </mat-checkbox>
-              <div class="metric-label">
+              <div class="chapter-status" [class.chapter-status--done]="getChapterProgress(book()!, chapterNumber)?.completed">
                 @if (getChapterProgress(book()!, chapterNumber)?.completedAt) {
-                  {{ getChapterProgress(book()!, chapterNumber)?.completedTime }}
+                  <mat-icon>check_circle</mat-icon>
+                  <span>{{ getChapterProgress(book()!, chapterNumber)?.completedAt | date: 'dd/MM/yyyy' }} • {{ getChapterProgress(book()!, chapterNumber)?.completedTime }}</span>
                 } @else {
-                  {{ i18n.t().bookDetails.pending }}
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ i18n.t().bookDetails.pending }}</span>
                 }
               </div>
             </div>

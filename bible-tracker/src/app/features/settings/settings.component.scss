@@ -33,35 +33,77 @@
   margin-top: 8px;
 }
 
-.animations-toggle {
-  margin-top: 18px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #1a2842;
+// Animations toggle styled as list item for better visual hierarchy
+.animations-list {
+  padding: 16px 0;
+  margin: 18px -30px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
+.animations-item {
+  height: auto;
+  padding: 16px 30px;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.animations-item span {
+  flex: 1;
+}
+
+// Button layout: primary actions (Save + Cancel) in a row, Reset below
 .action-row {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  margin-top: 28px;
+}
+
+.button-row-primary {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
   align-items: stretch;
-  margin-top: 22px;
 }
 
 .save-button {
-  width: 100%;
-  min-height: 56px;
-  font-size: 1.15rem;
+  flex: 1;
+  min-height: 52px;
+  font-size: 1.1rem;
   font-weight: 700;
-  background: linear-gradient(120deg, #15a3a9 0%, #07999e 100%);
+  background: linear-gradient(120deg, #15a3a9 0%, #07999e 100%) !important;
+  color: #ffffff !important;
+}
+
+.cancel-button {
+  min-width: 140px;
+  min-height: 52px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-width: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cancel-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.cancel-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .reset-button {
-  width: max-content;
-  min-width: 280px;
-  min-height: 52px;
+  width: 100%;
+  min-height: 48px;
   border-width: 2px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
@@ -70,8 +112,20 @@
     padding: 22px;
   }
 
-  .reset-button {
+  .animations-list {
+    margin: 18px -22px 0;
+  }
+
+  .animations-item {
+    padding: 16px 22px;
+  }
+
+  .button-row-primary {
+    flex-direction: column;
+  }
+
+  .cancel-button {
     width: 100%;
-    min-width: 0;
+    justify-content: center;
   }
 }

@@ -53,7 +53,7 @@
                   }
                   {{ entry.chapterNumber }}
                 </div>
-                <div class="history-meta">{{ entry.completedTime }}</div>
+                <div class="history-meta">{{ entry.completedAt | date: 'dd/MM/yyyy' }} • {{ entry.completedTime }}</div>
               </div>
             </div>
           }

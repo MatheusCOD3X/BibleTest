@@ -21,6 +21,7 @@ export interface Translations {
     backup: string;
     settings: string;
     save: string;
+    cancel: string;
     close: string;
     chapter: string;
     chapters: string;
@@ -77,6 +78,9 @@ export interface Translations {
     progressUpdated: string;
     bookMarkedComplete: string;
     bookProgressRemoved: string;
+    completedLabel: string;
+    remainingLabel: string;
+    chaptersLabel: string;
   };
   statistics: {
     title: string;
@@ -132,6 +136,7 @@ export interface Translations {
     resetApp: string;
     confirmReset: string;
     settingsSaved: string;
+    settingsCanceled: string;
     appReset: string;
   };
   backup: {
@@ -155,6 +160,7 @@ const PT_BR: Translations = {
     backup: 'Backup',
     settings: 'Configurações',
     save: 'Salvar',
+    cancel: 'Cancelar',
     close: 'Fechar',
     chapter: 'Capítulo',
     chapters: 'capítulos',
@@ -216,7 +222,10 @@ const PT_BR: Translations = {
     bookNotFound: 'Livro não encontrado.',
     progressUpdated: 'Progresso atualizado',
     bookMarkedComplete: 'Livro marcado como concluído',
-    bookProgressRemoved: 'Progresso do livro removido'
+    bookProgressRemoved: 'Progresso do livro removido',
+    completedLabel: 'Concluídos',
+    remainingLabel: 'Restantes',
+    chaptersLabel: 'Capítulos'
   },
   statistics: {
     title: 'Dashboard e Estatísticas',
@@ -272,6 +281,7 @@ const PT_BR: Translations = {
     resetApp: 'Resetar aplicativo',
     confirmReset: 'Confirmar reset',
     settingsSaved: 'Configurações salvas',
+    settingsCanceled: 'Alterações descartadas',
     appReset: 'App resetado'
   },
   backup: {
@@ -295,6 +305,7 @@ const EN: Translations = {
     backup: 'Backup',
     settings: 'Settings',
     save: 'Save',
+    cancel: 'Cancel',
     close: 'Close',
     chapter: 'Chapter',
     chapters: 'chapters',
@@ -356,7 +367,10 @@ const EN: Translations = {
     bookNotFound: 'Book not found.',
     progressUpdated: 'Progress updated',
     bookMarkedComplete: 'Book marked as complete',
-    bookProgressRemoved: 'Book progress removed'
+    bookProgressRemoved: 'Book progress removed',
+    completedLabel: 'Completed',
+    remainingLabel: 'Remaining',
+    chaptersLabel: 'Chapters'
   },
   statistics: {
     title: 'Dashboard & Statistics',
@@ -412,6 +426,7 @@ const EN: Translations = {
     resetApp: 'Reset app',
     confirmReset: 'Confirm reset',
     settingsSaved: 'Settings saved',
+    settingsCanceled: 'Changes discarded',
     appReset: 'App reset'
   },
   backup: {
@@ -435,6 +450,7 @@ const ES: Translations = {
     backup: 'Copia de seguridad',
     settings: 'Configuración',
     save: 'Guardar',
+    cancel: 'Cancelar',
     close: 'Cerrar',
     chapter: 'Capítulo',
     chapters: 'capítulos',
@@ -496,7 +512,10 @@ const ES: Translations = {
     bookNotFound: 'Libro no encontrado.',
     progressUpdated: 'Progreso actualizado',
     bookMarkedComplete: 'Libro marcado como completado',
-    bookProgressRemoved: 'Progreso del libro eliminado'
+    bookProgressRemoved: 'Progreso del libro eliminado',
+    completedLabel: 'Completados',
+    remainingLabel: 'Restantes',
+    chaptersLabel: 'Capítulos'
   },
   statistics: {
     title: 'Panel y Estadísticas',
@@ -552,6 +571,7 @@ const ES: Translations = {
     resetApp: 'Restablecer aplicación',
     confirmReset: 'Confirmar restablecimiento',
     settingsSaved: 'Configuración guardada',
+    settingsCanceled: 'Cambios descartados',
     appReset: 'Aplicación restablecida'
   },
   backup: {

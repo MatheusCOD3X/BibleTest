@@ -151,7 +151,7 @@
     <mat-card-content>
       @if (history().length) {
         @for (entry of history().slice(0, 6); track entry.id) {
-          <p>{{ entry.completedTime }} • {{ getBookName(entry.bookId) }} {{ entry.chapterNumber }}</p>
+          <p>{{ entry.completedAt | date: 'dd/MM/yyyy' }} • {{ entry.completedTime }} • {{ getBookName(entry.bookId) }} {{ entry.chapterNumber }}</p>
         }
       } @else {
         <p>{{ i18n.t().statistics.noReadingsYet }}</p>

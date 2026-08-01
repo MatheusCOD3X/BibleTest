@@ -11,14 +11,21 @@
   padding: 30px;
   min-height: 260px;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   background:
     radial-gradient(circle at 20% 10%, rgba(79, 207, 204, 0.45) 0%, rgba(79, 207, 204, 0) 45%),
     linear-gradient(135deg, #1c9aa6 0%, #12477a 100%);
   color: #ffffff;
   position: relative;
   overflow: hidden;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero-copy h1 {
@@ -37,8 +44,8 @@
   margin-top: 28px;
   min-width: 300px;
   min-height: 56px;
-  background: #ffffff;
-  color: #1b7e88;
+  background: #ffffff !important;
+  color: #1b7e88 !important;
   font-size: 1.28rem;
   font-weight: 800;
 }

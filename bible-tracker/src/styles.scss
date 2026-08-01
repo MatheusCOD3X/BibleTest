@@ -226,18 +226,86 @@ select {
   color: var(--color-surface);
 }
 
-.mat-progress-bar {
-  height: 10px;
+// Angular Material 19 renders <mat-progress-bar> with an MDC-based structure
+// (.mdc-linear-progress / .mdc-linear-progress__bar-inner / .mdc-linear-progress__buffer-bar).
+// The bar "fill" is drawn via a thick border-top (not background), so colors must target
+// border-top-color, not background. No Angular Material theme is configured in this project
+// (colors are hand-rolled everywhere), so Material's own unthemed rules resolve their CSS custom
+// properties to invalid/currentColor values. Those internal rules share the exact same selector
+// specificity as the ones below and are injected later in the stylesheet order, so they win the
+// cascade unless we use !important here.
+.mat-mdc-progress-bar {
+  display: block;
   border-radius: 999px;
   overflow: hidden;
 }
 
-.mat-progress-bar-background {
-  background-color: #e8eff6 !important;
+.mdc-linear-progress {
+  border-radius: 999px !important;
+  overflow: hidden;
+  height: 10px !important;
 }
 
-.mat-progress-bar-fill::after {
-  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-strong) 100%) !important;
+.mdc-linear-progress__bar,
+.mdc-linear-progress__buffer-bar,
+.mdc-linear-progress__bar-inner {
+  height: 10px !important;
+}
+
+.mdc-linear-progress__bar-inner {
+  border-top-style: solid !important;
+  border-top-width: 10px !important;
+  border-top-color: var(--color-accent) !important;
+}
+
+.mdc-linear-progress__buffer-bar {
+  border-top-style: solid !important;
+  border-top-width: 10px !important;
+  border-top-color: var(--color-border) !important;
+}
+
+.mdc-linear-progress__buffer {
+  background-color: transparent;
+}
+
+// mat-slide-toggle (Configurações > Animações) uses the same MDC token gap as above:
+// track/handle backgrounds default to transparent, leaving only the on/off icon visible.
+.mdc-switch {
+  .mdc-switch__track {
+    border-radius: 999px;
+
+    &::before {
+      background-color: var(--color-border);
+    }
+
+    &::after {
+      background-color: var(--color-accent);
+    }
+  }
+
+  .mdc-switch__handle-track,
+  .mdc-switch__handle {
+    &::before,
+    &::after {
+      background-color: #ffffff;
+    }
+  }
+
+  .mdc-switch__icon {
+    fill: currentColor;
+  }
+
+  &.mdc-switch--unselected .mdc-switch__icon--off {
+    color: var(--color-muted);
+  }
+
+  &.mdc-switch--selected .mdc-switch__icon--on {
+    color: var(--color-accent-strong);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 }
 
 button.mat-raised-button,
@@ -316,6 +384,30 @@ button:disabled,
 .mat-input-element::placeholder {
   color: var(--color-muted);
   opacity: 1;
+}
+
+// Autocomplete panel styling - opaque, strong contrast
+.mat-mdc-autocomplete-panel {
+  background: var(--color-surface) !important;
+  box-shadow: 0 16px 38px rgba(16, 32, 58, 0.12) !important;
+  border-radius: var(--radius-ui);
+  overflow: hidden;
+}
+
+.mat-mdc-optgroup-label,
+.mdc-list-item {
+  color: var(--color-primary) !important;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.mat-mdc-option:hover {
+  background-color: var(--color-bg-soft) !important;
+}
+
+.mat-mdc-option.mat-selected {
+  background-color: var(--color-bg) !important;
+  color: var(--color-accent-strong) !important;
 }
 
 .stats-grid,

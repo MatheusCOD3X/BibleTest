@@ -13,6 +13,11 @@
   align-items: center;
 }
 
+.mark-complete-btn {
+  background: linear-gradient(120deg, #15a3a9 0%, #07999e 100%) !important;
+  color: #ffffff !important;
+}
+
 .detail-card {
   border-radius: var(--radius-ui);
   padding: 26px;
@@ -28,6 +33,100 @@
   box-shadow: 0 16px 38px rgba(16, 32, 58, 0.06);
   height: 180px;
   box-sizing: border-box;
+  border-left: 5px solid var(--color-border);
+  transition: border-color 0.2s ease;
+}
+
+.chapter-card--completed {
+  border-left-color: var(--color-accent);
+}
+
+.progress-card {
+  padding: 26px;
+}
+
+.progress-hero {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.progress-ring {
+  flex: 0 0 auto;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: conic-gradient(var(--color-accent) calc(var(--progress) * 1%), var(--color-border) 0);
+  display: grid;
+  place-items: center;
+}
+
+.progress-ring-inner {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 2px 6px rgba(16, 32, 58, 0.08);
+}
+
+.progress-ring-percent {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.progress-hero-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.progress-book-title {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.4vw, 2.3rem);
+}
+
+.testament-badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: var(--color-bg-soft);
+  color: var(--color-accent-strong);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.progress-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.progress-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.progress-stat strong {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.1;
+}
+
+.progress-stat span {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.progress-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--color-border);
 }
 
 .chapters-viewport {
@@ -70,6 +169,26 @@
   color: var(--color-muted);
 }
 
+.chapter-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chapter-status mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.chapter-status--done {
+  color: var(--color-accent-strong);
+}
+
 .empty-state {
   padding: 24px;
   border-radius: var(--radius-ui);
@@ -86,6 +205,16 @@
 
   .chapters-viewport {
     height: 520px;
+  }
+
+  .progress-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .progress-stats-row {
+    flex-wrap: wrap;
   }
 }
 
