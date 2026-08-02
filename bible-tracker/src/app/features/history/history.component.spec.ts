@@ -43,18 +43,38 @@ describe('HistoryComponent', () => {
     });
 
     it('sorts oldest first when sort mode is "oldest"', () => {
-      const genesis = bibleDataService.getBookById('gen')!;
-      const exodus = bibleDataService.getBookById('exo')!;
-      jasmine.clock().install();
-      storageService.toggleChapter(genesis, 1);
-      jasmine.clock().tick(1000);
-      storageService.toggleChapter(exodus, 1);
-      jasmine.clock().uninstall();
+    // PASSO 1: Limpe o serviço para garantir que o teste comece vazio
+    // (Substitua 'clearHistory' pelo método correto que zera o seu storage)
+    // storageService.clearHistory(); 
 
-      const fixture = TestBed.createComponent(HistoryComponent);
-      fixture.componentInstance.setSort('oldest');
+    const genesis = bibleDataService.getBookById('gen')!;
+    const exodus = bibleDataService.getBookById('exo')!;
+    
+    jasmine.clock().install();
+    
+    // PASSO 2: Defina uma data base para o mock!
+    const baseTime = new Date(2023, 1, 1).getTime();
+    jasmine.clock().mockDate(new Date(baseTime));
+    
+    storageService.toggleChapter(genesis, 1);
+    
+    jasmine.clock().tick(1000);
+    
+    storageService.toggleChapter(exodus, 1);
+    
+    jasmine.clock().uninstall();
 
-      expect(fixture.componentInstance.entries()[0].bookId).toBe('gen');
+    const fixture = TestBed.createComponent(HistoryComponent);
+    
+    // PASSO 3: Inicializa o componente (dispara ngOnInit)
+    fixture.detectChanges(); 
+
+    fixture.componentInstance.setSort('oldest');
+    
+    // PASSO 4: Força a detecção de mudanças APÓS mudar o tipo de ordenação
+    fixture.detectChanges(); 
+
+    expect(fixture.componentInstance.entries()[0].bookId).toBe('gen');
     });
 
     it('sorts alphabetically by translated book name when sort mode is "book"', () => {
